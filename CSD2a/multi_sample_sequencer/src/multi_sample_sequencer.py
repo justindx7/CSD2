@@ -34,15 +34,12 @@ events = []
 def eventHandler(event):
     if event['velocity'] > 0:
         event['sample'].play()
-        if event['sample'] == 'kick':
-            kick.play()
-        if event['sample'] == 'snare':
-            snare.play()
 
 
 # load audio sample
 kick = sa.WaveObject.from_wave_file("../../../Samples/kick.wav")
 snare = sa.WaveObject.from_wave_file("../../../Samples/snare.wav")
+shaker = sa.WaveObject.from_wave_file("../../../Samples/shaker.wav")
 
 bpm = 120
 print("Default bpm: ",bpm)
@@ -71,9 +68,11 @@ timeStamps = timestampsToDelay(timestamps16th, bpm)
 print("16TH Time stamp:", timeStamps)
 
 for i in range(len(timeStamps)):
-    events.append(createEvent(timeStamps[i], "kick", 127))
+    events.append(createEvent(timeStamps[i], kick, 127))
 
-    events.append(createEvent(timeStamps[i], "snare", 127))
+    events.append(createEvent(timeStamps[i], snare, 127))
+
+    events.append(createEvent(timeStamps[i], shaker, 127))
     
 print("amount of events" ,len(events))
 
