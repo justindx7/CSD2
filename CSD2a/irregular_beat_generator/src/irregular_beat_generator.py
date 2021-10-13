@@ -2,6 +2,8 @@ import simpleaudio as sa
 import click
 import time
 import random
+import threading
+import playLoop
 
 # Calculate amount of sixteen notes in the user input time signature
 def sigCalculator(a,b):
@@ -42,13 +44,6 @@ def createEvent(timestamp,sample,velocity):
     }
 
 events = []
-
-#function to handle events
-def eventHandler(event):
-    if event['velocity'] > 0:
-        event['sample'].play()
-
-
 
 # load audio samples
 kick = sa.WaveObject.from_wave_file("../../../Samples/kick.wav")
@@ -109,39 +104,21 @@ timeStamps = timestampsToDelay(timestamps16th, bpm)
 print("16TH Time stamp:", timeStamps)
 
 
+# For loop that makes the sound events  and puts them in a list.
 for i in range(len(timeStamps)):
-    events.append(createEvent(timeStamps[i], kick, 0))
 
-    events.append(createEvent(timeStamps[i], snare, 0))
+    if(noteDurations[i] >= 0.75):
+        events.append(createEvent(timeStamps[i], kick, 127))
 
-    events.append(createEvent(timeStamps[i], shaker, 127))
+    if(noteDurations[i] == 0.5):
+        events.append(createEvent(timeStamps[i], snare, 127))
+
+    if(noteDurations[i] <= 0.25):
+        events.append(createEvent(timeStamps[i], shaker, 127))
     
 print("amount of events" ,len(events))
-
-
-#ALL TIME STUFF IS DONE HERE
-
-zero_time = time.time()
-
-# the i is used to determine the time stamp that should be used
-i = 0
-
-# start a time counter and look if the timestamps list is equal to the current time 
-while True:
-    now = time.time() - zero_time
-    #Read time stamp from event
-    if(now >= float(events[i]['timestamp'])):
-        eventHandler(events[i])
-        i = i + 1
-        # if the i is at the end of the given list stop the loop
-        if i == len(events):
-            break
-    # update time
-    time.sleep(0.001)
-# wait until the last sample is done playing     
-time.sleep(timeStamps[-1])
-
-
+thread1 = playLoop.playLoop(1,"Thread-playLoop",events)
+thread1.start()
 
 
 
