@@ -2,15 +2,23 @@ import threading
 import time
 import simpleaudio
 
+
 class playLoop(threading.Thread):
     def __init__(self,threadID,name,eventList):
         threading.Thread.__init__(self)
+        self._running = True
         self.threadID = threadID
         self.name = name
         self.eventList = eventList
+        self.on = True
+    
+    def terminate(self):
+        self.on = False
+
     
     #_____ALL TIME STUFF IS DONE HERE_____
     def run(self):
+        self.on = True
         print("Starting " + self.name)
         zeroTime = time.time()
 
@@ -18,7 +26,7 @@ class playLoop(threading.Thread):
         i = 0
 
         # start a time counter and look if the timestamps list is equal to the current time 
-        while True:
+        while True and self.on:
             now = time.time() - zeroTime
             #Read time stamp from event
             if(now >= float(self.eventList[i]['timestamp'])):
@@ -35,3 +43,4 @@ class playLoop(threading.Thread):
     def eventHandler(self,event):
         if event['velocity'] > 0:
             event.get('sample').play()  
+
