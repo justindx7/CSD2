@@ -170,6 +170,8 @@ def main():
             thread1.terminate()
             thread1.join()
         elif(userinput == "restart"):
+            thread1.terminate()
+            thread1.join            
             main()
         else:
             print("not a valid command, type help for a list")
