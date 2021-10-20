@@ -6,14 +6,9 @@ from midiutil import MIDIFile
 def main():
     # Calculate amount of sixteen notes in the user input time signature
     def sigCalculator(a,b):
-        if b == 4:
-            c = a * b
-
-        elif b == 8:
-            c = a * 2
-        
-        c = c * 0.25
+        c = a * 16 /b
         print("amount of sixteen notes per bar: ", c)  
+        c = c * 0.25
         return c
 
     # function to turn noteDurations into 16ths timestamps (make a 16th grid)
@@ -54,15 +49,23 @@ def main():
 
 
     # choose time signature and calculate note lenghts
-    while True:
-        x, y = input("Enter a time signature: ").split("/")
+    while True:    
         try:
-            val = int(x)
-            val = int(y)
+            x, y = input("Enter a time signature: ").split("/")
+            x = int(x)
+            y = int(y)            
+        except:
+            print("input was not correct try again")
+            print("should be 'number1'/'number2'")
+        else:
+            if(x == 0 or y == 0):
+                print("input cant be zero")
+                continue
+            if(x > 16 or y > 16):
+                print("input cant be bigger than 16")
+                continue
             print("time signature: ", x,"/",y)
             break
-        except ValueError:
-            print("Value was not correct syntax try again")
 
     totalAmount = sigCalculator(int(x),int(y))
     amount = totalAmount - 1
@@ -89,13 +92,22 @@ def main():
     # [Y/n] question to change bpm
     if click.confirm('Do you want to edit the bpm?', default=True):
         while True:
-            bpm = int(input(""))
             try:
-                val = int(bpm)
+                bpm = int(input("BPM:"))
+            except ValueError:
+                print("Value was not correct syntax try again") 
+            except:
+                print("input was not correct try again") 
+            else:
+                if(bpm < 10):
+                    print("bpm to low minimum bpm is 10")
+                    continue
+                if(bpm > 200):
+                    print("bpm to low minimum bpm is 200")
+                    continue
                 print("BPM: ",bpm)
                 break
-            except ValueError:
-                print("Value was not correct syntax try again")  
+
 
     # create list with 16ths timestamps calculated in the function 
     timestamps16th = durationsToTimestamps16th(noteDurations)
@@ -122,6 +134,9 @@ def main():
     thread1 = playLoop.playLoop(1,"Thread-playLoop",events)
     thread1.start()
 
+
+    #https://pypi.org/project/MIDIUtil/
+    #https://github.com/ciskavriezenga/CSD_21-22/blob/master/csd2a/theorie/6_midpoint_displacement.py
     #____create midi output____
     def createMIDI(tmpbpm):
         mf = MIDIFile(1)
@@ -145,7 +160,7 @@ def main():
 
         with open("myDrumRhythm.mid",'wb') as outf:
             mf.writeFile(outf)
-
+    print("typ help for command list")
     while True:
         userinput = input()
         if(userinput == "end"): 
