@@ -26,10 +26,10 @@ class playLoop(threading.Thread):
         i = 0
 
         # start a time counter and look if the timestamps list is equal to the current time 
-        while True and self.on:
+        while self.on:
             now = time.time() - zeroTime
             #Read time stamp from event
-            if(now >= float(self.eventList[i]['timestamp'])):
+            if(now >= self.eventList[i]['timestamp']):
                 self.eventHandler(self.eventList[i])
                 i = i + 1
                 # if the i is at the end of the given list reset i and zero_time
