@@ -58,10 +58,10 @@ def main():
             print("input was not correct try again")
             print("should be 'number1'/'number2'")
         else:
-            if(x == 0 or y == 0):
-                print("input cant be zero")
+            if(x <= 0 or y <= 0):
+                print("input cant be zero or below")
                 continue
-            if(x > 16 or y > 16):
+            if(x  > 16 or y > 16):
                 print("input cant be bigger than 16")
                 continue
             print("time signature: ", x,"/",y)
@@ -77,7 +77,6 @@ def main():
         rnd = random.randrange(25, 100, 25) / 100
         tmp = tmp + rnd
         noteDurations.append(rnd)
-        print(tmp)
         if(tmp >= amount):
             noteDurations.append(totalAmount - tmp)
             break
@@ -100,10 +99,10 @@ def main():
                 print("input was not correct try again") 
             else:
                 if(bpm < 10):
-                    print("bpm to low minimum bpm is 10")
+                    print("bpm too low minimum bpm is 10")
                     continue
-                if(bpm > 200):
-                    print("bpm to low minimum bpm is 200")
+                if(bpm > 300):
+                    print("bpm too high maximum bpm is 300")
                     continue
                 print("BPM: ",bpm)
                 break
@@ -111,14 +110,12 @@ def main():
 
     # create list with 16ths timestamps calculated in the function 
     timestamps16th = durationsToTimestamps16th(noteDurations)
-    print("16TH:", timestamps16th)
 
     # create list with ms timestamps calculated in the function
     timeStamps = timestampsToDelay(timestamps16th, bpm)
-    print("16TH Time stamp:", timeStamps)
 
 
-    # For loop that makes the sound events  and puts them in a list. 
+    # For loop that makes the sound events checks notDuration and puts them in a list. 
     for i in range(len(timeStamps)):
 
         if(noteDurations[i] >= 0.75):
@@ -129,8 +126,11 @@ def main():
 
         if(noteDurations[i] <= 0.25):
             events.append(createEvent(timeStamps[i], shaker, 127, 42,noteDurations[i], "shaker"))
-        
+
     print("amount of events" ,len(events))
+
+    #Start the playLoop thread so audio starts looping in a different thread and we can still have user input
+    #and send the event list so it knows what to play
     thread1 = playLoop.playLoop(1,"Thread-playLoop",events)
     thread1.start()
 
@@ -156,10 +156,13 @@ def main():
                         time, dur, volume)
             # increment time based on the duration of the added note
             time = time + dur
-            print(time)
-
+        
+        #write it to file
         with open("myDrumRhythm.mid",'wb') as outf:
             mf.writeFile(outf)
+
+
+    #while loop that checks user input (custom command line)
     print("typ help for command list")
     while True:
         userinput = input()
@@ -177,6 +180,7 @@ def main():
         elif(userinput == "exit"):  
             thread1.terminate()
             thread1.join
+            #not break but quit becouse otherwise it will run the main() again
             quit()
         elif(userinput == "save"):
             print("saving drum rhythm to midi")

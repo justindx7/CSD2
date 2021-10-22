@@ -3,6 +3,7 @@ import time
 import simpleaudio
 
 
+#Making a new class
 class playLoop(threading.Thread):
     def __init__(self,threadID,name,eventList):
         threading.Thread.__init__(self)
@@ -38,7 +39,8 @@ class playLoop(threading.Thread):
                     zeroTime = time.time()            
             # update time
             time.sleep(0.001)
-        # wait until the last sample is done playing   
+        # wait until the last sample is done playing
+        #    
     #function to handle events
     def eventHandler(self,event):
         if event['velocity'] > 0:
