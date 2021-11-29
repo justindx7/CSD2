@@ -1,3 +1,6 @@
+#ifndef PERCUSSIVEINSTRUMENT_H
+#define PERCUSSIVEINSTRUMENT_H 
+
 #include "instrument.h"
 
 
@@ -8,3 +11,5 @@ public:
     ~percussiveInstrument();
     void roll(int amountOfRepetitions, int rollMidiNote);
 };
+
+#endif
