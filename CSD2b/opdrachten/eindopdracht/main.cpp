@@ -63,14 +63,16 @@ int main(int argc,char **argv)
     }
   }
 
-//WRITING DATA TO FILE
-WriteToFile fileWriter("output.csv", true);
-  for(int i = 0; i < samplerate; i++) {
-    fileWriter.write(std::to_string(sine.getSample()) + "\n");
-    sine.tick();
+  //WRITING DATA TO FILE
+  WriteToFile fileWriter("output.csv", true);
 
-    fileWriter.write(std::to_string(square.getSample()) + "\n");
-    square.tick();
+  for (auto osc : oscillators)
+  {
+    for (int i = 0; i < samplerate; i++)
+    {
+      fileWriter.write(std::to_string(osc->getSample()) + "\n");
+      osc->tick();
+    }
   }
   //end the program
   return 0;
