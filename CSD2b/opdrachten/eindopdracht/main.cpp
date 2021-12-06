@@ -2,7 +2,12 @@
 #include <thread>
 #include "jack_module.h"
 #include "math.h"
+#include "oscillator.h"
 #include "sine.h"
+#include "square.h"
+
+
+
 
 /*
  * NOTE: jack2 needs to be installed
@@ -20,7 +25,7 @@ void assignFunction(JackModule &jack, Oscillator &oscillator, float &amplitude)
     jack_default_audio_sample_t *outBuf, jack_nframes_t nframes) {
 
     for(unsigned int i = 0; i < nframes; i++) {
-      outBuf[i] = oscillator.getSample() * amplitude;
+      outBuf[i] += oscillator.getSample() * amplitude;
       oscillator.tick();
     }
     amplitude = 0.5;
@@ -37,12 +42,16 @@ int main(int argc,char **argv)
   // init the jack, use program name as JACK client name
   jack.init(argv[0]);
   double samplerate = jack.getSamplerate();
-  Sine sine (220, samplerate);
+  Square square(110, samplerate);
+  Sine sine(220, samplerate);
   
   float amplitude = 0.15;
  
+  assignFunction(jack, square, amplitude);
   assignFunction(jack, sine, amplitude);
 
+
+  jack.autoConnect();
   jack.autoConnect();
   
   //keep the program running and listen for user input, q = quit
