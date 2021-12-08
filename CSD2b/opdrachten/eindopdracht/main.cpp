@@ -16,7 +16,7 @@
  * jackd -d coreaudio
  */
 
-//used virtual so this works
+//assignFunction for telling jack what wave forms to play
 void assignFunction(JackModule &jack, std::vector<Oscillator*> &oscillators, float &amplitude)
 {
  //assign a function to the JackModule::onProces
@@ -44,7 +44,10 @@ int main(int argc,char **argv)
   // init the jack, use program name as JACK client name
   jack.init(argv[0]);
   double samplerate = jack.getSamplerate();
+
+  //create a vector and fill it with pointers to subclasses from Oscillator
   std::vector<Oscillator*> oscillators { new Sine(550, samplerate), new Square(110, samplerate) };
+
   float amplitude = 0.15;
   assignFunction(jack, oscillators, amplitude);
   jack.autoConnect();
@@ -73,6 +76,10 @@ int main(int argc,char **argv)
       fileWriter.write(std::to_string(osc->getSample()) + "\n");
       osc->tick();
     }
+  }
+  //CALLING destructors
+  for(auto osc : oscillators){
+    delete osc;
   }
   //end the program
   return 0;
