@@ -5,6 +5,7 @@
 #include "math.h"
 #include "oscillator.h"
 #include "sine.h"
+#include "saw.h"
 #include "square.h"
 #include "writeToFile.h"
 
@@ -46,7 +47,7 @@ int main(int argc,char **argv)
   double samplerate = jack.getSamplerate();
 
   //create a vector and fill it with pointers to subclasses from Oscillator
-  std::vector<Oscillator*> oscillators { new Sine(550, samplerate), new Square(110, samplerate) };
+  std::vector<Oscillator*> oscillators { new Sine(550, samplerate), new Square(110, samplerate), new Saw(220, samplerate)};
 
   float amplitude = 0.15;
   assignFunction(jack, oscillators, amplitude);

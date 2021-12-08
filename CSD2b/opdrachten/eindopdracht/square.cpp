@@ -1,10 +1,6 @@
 #include "square.h"
 #include "math.h"
 
-//signum function 
-template <typename T> int sgn(T val) {
-    return (T(0) < val) - (val < T(0));
-}
 
 Square::Square(float frequency, double samplerate) 
   : Oscillator(frequency, samplerate)
@@ -17,15 +13,17 @@ Square::~Square()
   std::cout << "Square - destructor\n";
 }
 
-float Square::getSample() 
-{
-  return sample;
-}
-
-void Square::tick() {
+void Square::calculate() {
   // NOTE 1. - frequency / SAMPLERATE can be implemented in a more efficient way
-  // NOTE 2. - still need todo 'something' with the phase, see 04_sin_function
   phase += getFrequency() / getSampleRate();
-  sample = sgn(sin(M_PI * 2 * phase) * amplitude);
+  // wrap the phase so it stays in the interval [0, 1]
+  if(phase > 1) phase -= 1.0;
+  // square functionality comes here
+  if(phase < 0.5) {
+    setSample(1.0);
+  } else {
+    setSample(-1.0);
+  }
+  setSample(getSample() * amplitude);
 }
 

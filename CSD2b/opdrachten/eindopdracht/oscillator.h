@@ -1,5 +1,7 @@
 #ifndef OSCILLATOR_H
 #define OSCILLATOR_H 
+#include <iostream>
+
 
 class Oscillator 
 {
@@ -15,12 +17,17 @@ public:
     void setSampleRate(double newSamplerate);
     double getSampleRate();
 
-    virtual float getSample() = 0;
-    virtual void tick() = 0;
+    void setSample(float newSamplerate);
+
+    float getSample();
+    void tick();
+
+    virtual void calculate() = 0;
 
 private:
     float frequency;
     double samplerate;
+    float sample = 0;
 };
 
 #endif

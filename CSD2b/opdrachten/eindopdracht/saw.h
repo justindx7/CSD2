@@ -1,16 +1,16 @@
-#ifndef _SQUARE_H_
-#define _SQUARE_H_
+#ifndef _SAW_H_
+#define _SAW_H_
 #include <iostream>
 #include "oscillator.h"
 
-class Square : public Oscillator
+class Saw : public Oscillator
 {
 public:
   //Constructor and destructor
-  Square(float frequency, double samplerate);
-  ~Square();
+  Saw(float frequency, double samplerate);
+  ~Saw();
 
-  //calculate waveform
+//calculate wave form
   void calculate() override;
 
 private:

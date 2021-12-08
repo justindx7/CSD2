@@ -7,6 +7,8 @@ Oscillator::Oscillator(float frequency, double samplerate)
 
 Oscillator::~Oscillator()
 {
+    std::cout << "Oscillator - destructor\n";
+
 }
 
 //getters and setters
@@ -30,4 +32,19 @@ void Oscillator::setSampleRate(double newSamplerate)
 double Oscillator::getSampleRate()
 {
   return samplerate;
+}
+
+void Oscillator::setSample(float newSample)
+{
+sample = newSample;
+}
+
+float Oscillator::getSample()
+{
+  return sample;
+}
+
+void Oscillator::tick()
+{
+calculate();
 }
