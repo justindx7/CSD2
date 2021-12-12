@@ -7,6 +7,7 @@ class Sine : public Oscillator
 {
 public:
   //Constructor and destructor
+  Sine();
   Sine(float frequency, double samplerate);
   ~Sine();
 
