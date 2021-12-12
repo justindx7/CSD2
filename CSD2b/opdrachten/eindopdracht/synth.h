@@ -12,18 +12,29 @@ public:
     Synth(float midiPitch);
     virtual ~Synth();
 
-    virtual void tick() = 0;
+    virtual void calc() = 0;
+
+    void tick();
+
+    float getSample();
+    float getMidiPitch();
     static double getSampleRate();
     static void setSampleRate(double newSamplerate);
+
+    void setSample(float newSample);
+
 
 protected:
     //  virtual void calculate() = 0;
     double midiToFrequency(float pitch);
+    float midiPitch;
 
 private:
-    float midiPitch;
     float amplitude;
     static double samplerate;
+
+    float sample = 0;
+
 };
 
 #endif

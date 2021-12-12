@@ -8,7 +8,6 @@
 SimpleSynth::SimpleSynth(float midiPitch, Oscillator* oscillator)
     : Synth(midiPitch), oscillator(oscillator)
 {
-  setMidiPitch(midiPitch);
 }
 
 SimpleSynth::~SimpleSynth()
@@ -17,17 +16,13 @@ SimpleSynth::~SimpleSynth()
   std::cout << "simpleSynth - destructor\n";
 }
 
-void SimpleSynth::tick()
+void SimpleSynth::calc()
 {
-    oscillator->tick();
-}
-
-void SimpleSynth::setMidiPitch(float midiPitch)
-{
-  // TODO check if pitch is different
-  // TODO - check if pitch is in range
-  double freq = midiToFrequency(midiPitch);
+ double freq = midiToFrequency(midiPitch);
 
     oscillator->setFrequency(freq);
+        oscillator->tick();
 }
+
+
 

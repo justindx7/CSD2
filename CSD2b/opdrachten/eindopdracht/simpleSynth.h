@@ -13,12 +13,8 @@ public:
     SimpleSynth(float midiPitch, Oscillator* oscillator);
     ~SimpleSynth();
 
-    // go to next sample
-    void tick() override;
-
-    //setters and getters
-    double getSample();
-    void setMidiPitch(float pitch);
+    //calculate sample
+    void calc() override;
 
 private:
     Oscillator* oscillator;
