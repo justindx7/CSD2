@@ -7,7 +7,7 @@ class Saw : public Oscillator
 {
 public:
   //Constructor and destructor
-  Saw(float frequency, double samplerate);
+  Saw(float frequency);
   ~Saw();
 
 //calculate wave form

@@ -1,15 +1,15 @@
 #include "saw.h"
 #include "math.h"
 
-Saw::Saw(float frequency, double samplerate) 
-  : Oscillator(frequency, samplerate)
+Saw::Saw(float frequency) 
+  : Oscillator(frequency)
 {
-  std::cout << "Sine - constructor\n";
+  std::cout << "Saw - constructor\n";
 }
 
 Saw::~Saw() 
 {
-  std::cout << "Sine - destructor\n";
+  std::cout << "Saw - destructor\n";
 }
 
 void Saw::calculate()

@@ -1,21 +1,20 @@
 #ifndef OSCILLATOR_H
 #define OSCILLATOR_H 
 #include <iostream>
+#include "synth.h"
+
 
 
 class Oscillator 
 {
 
 public:
-    Oscillator(float frequency, double samplerate);
+    Oscillator(float frequency);
     // if a class has virtual functions its destructor should also be virtual
     virtual ~Oscillator();
 
     void setFrequency(float frequency);
     float getFrequency();
-
-    void setSampleRate(double newSamplerate);
-    double getSampleRate();
 
     void setSample(float newSamplerate);
 
@@ -24,9 +23,11 @@ public:
 
     virtual void calculate() = 0;
 
+protected:
+    double getSampleRate();
+
 private:
     float frequency;
-    double samplerate;
     float sample = 0;
 };
 

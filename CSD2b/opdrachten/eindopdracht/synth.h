@@ -1,32 +1,29 @@
 #ifndef SYNTH_H
-#define SYNTH_H 
+#define SYNTH_H
 #include <iostream>
+#include <math.h>
+#include <vector>
+#include "jack_module.h"
 #include "oscillator.h"
-#include "sine.h"
-
 
 class Synth
 {
 public:
-    Synth(float midiPitch, double samplerate);
-    ~Synth();
+    Synth(float midiPitch);
+    virtual ~Synth();
 
-// go to next sample
-void tick();
+    virtual void tick() = 0;
+    static double getSampleRate();
+    static void setSampleRate(double newSamplerate);
 
-//setters and getters
-double getSample();
-void setMidiPitch(float pitch);
-
+protected:
+    //  virtual void calculate() = 0;
+    double midiToFrequency(float pitch);
 
 private:
-    double sample = 0;
-    double mtof(float pitch);
     float midiPitch;
-
-
-    Oscillator *oscillator;
-    Sine sine;
+    float amplitude;
+    static double samplerate;
 };
 
 #endif

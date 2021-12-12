@@ -4,9 +4,8 @@
 #include "jack_module.h"
 #include "math.h"
 #include "oscillator.h"
+#include "simpleSynth.h"
 #include "sine.h"
-#include "saw.h"
-#include "square.h"
 #include "writeToFile.h"
 
 /*
@@ -44,11 +43,14 @@ int main(int argc,char **argv)
 
   // init the jack, use program name as JACK client name
   jack.init(argv[0]);
-  double samplerate = jack.getSamplerate();
+
+  Synth::setSampleRate(jack.getSamplerate());
+  auto oscillator = new Sine(440);
+  SimpleSynth simple(64, oscillator);
 
   //create a vector and fill it with pointers to subclasses from Oscillator
-  std::vector<Oscillator*> oscillators { new Sine(550, samplerate), new Square(110, samplerate), new Saw(220, samplerate)};
 
+  std::vector<Oscillator*> oscillators { oscillator };
   float amplitude = 0.15;
   assignFunction(jack, oscillators, amplitude);
   jack.autoConnect();
@@ -72,16 +74,13 @@ int main(int argc,char **argv)
 
   for (auto osc : oscillators)
   {
-    for (int i = 0; i < samplerate; i++)
+    for (int i = 0; i < Synth::getSampleRate(); i++)
     {
       fileWriter.write(std::to_string(osc->getSample()) + "\n");
       osc->tick();
     }
   }
   //CALLING destructors
-  for(auto osc : oscillators){
-    delete osc;
-  }
   //end the program
   return 0;
 } // main()

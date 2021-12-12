@@ -1,41 +1,29 @@
 #include "synth.h"
-#include <math.h>
 
-Synth::Synth(float midiPitch, double samplerate) 
+double Synth::samplerate = 0;
+
+Synth::Synth(float midiPitch) :  midiPitch(midiPitch)
 {
-  sine.setSampleRate(samplerate);
-  setMidiPitch(midiPitch);
 }
 
 Synth::~Synth()
 {
-    std::cout << "Oscillator - destructor\n";
-
+    std::cout << "Synth - destructor\n";
 }
 
-void Synth::tick()
+double Synth::midiToFrequency(float pitch)
 {
-  sine.tick();
-  sample = sine.getSample();
-}
-
-
-double Synth::getSample()
-{ 
- return sample; 
-}
-
-void Synth::setMidiPitch(float pitch)
-{
-  // TODO check if pitch is different
-  // TODO - check if pitch is in range
-  midiPitch = pitch;
-  double freq = mtof(midiPitch);
-  sine.setFrequency(freq);
-}
-
-double Synth::mtof(float pitch)
-{
-  // turns midi note into freq
+  // turns midi note into frequency
   return pow(2.0, (float(pitch) - 69.0) / 12.0) * 440.0;
+}
+
+
+double Synth::getSampleRate()
+{
+  return samplerate;
+}
+
+void Synth::setSampleRate(double newSamplerate)
+{
+  samplerate = newSamplerate;
 }

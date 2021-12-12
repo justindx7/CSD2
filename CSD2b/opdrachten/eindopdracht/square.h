@@ -7,7 +7,7 @@ class Square : public Oscillator
 {
 public:
   //Constructor and destructor
-  Square(float frequency, double samplerate);
+  Square(float frequency);
   ~Square();
 
   //calculate waveform

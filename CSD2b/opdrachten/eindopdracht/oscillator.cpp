@@ -1,14 +1,13 @@
 #include "oscillator.h"
 
-Oscillator::Oscillator(float frequency, double samplerate) 
-  : frequency(frequency), samplerate(samplerate)
+Oscillator::Oscillator(float frequency)
+    : frequency(frequency)
 {
 }
 
 Oscillator::~Oscillator()
 {
-    std::cout << "Oscillator - destructor\n";
-
+  std::cout << "Oscillator - destructor\n";
 }
 
 //getters and setters
@@ -23,20 +22,14 @@ float Oscillator::getFrequency()
   return frequency;
 }
 
-void Oscillator::setSampleRate(double newSamplerate)
-{
-  // TODO add check to see if parameter is valid
-  samplerate = newSamplerate;
-}
-
 double Oscillator::getSampleRate()
 {
-  return samplerate;
+  return Synth::getSampleRate();
 }
 
 void Oscillator::setSample(float newSample)
 {
-sample = newSample;
+  sample = newSample;
 }
 
 float Oscillator::getSample()
@@ -46,5 +39,5 @@ float Oscillator::getSample()
 
 void Oscillator::tick()
 {
-calculate();
+  calculate();
 }
