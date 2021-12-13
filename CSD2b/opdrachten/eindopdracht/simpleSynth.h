@@ -4,20 +4,19 @@
 #include "oscillator.h"
 #include "synth.h"
 #include "jack_module.h"
+#include "sine.h"
 
 
 
 class SimpleSynth : public Synth
 {
 public:
-    SimpleSynth(float midiPitch, Oscillator* oscillator);
+    SimpleSynth(float midiPitch);
     ~SimpleSynth();
 
-    //calculate sample
-    void calc() override;
-
 private:
-    Oscillator* oscillator;
+    void calculate() override;
+    Sine sine;
 };
 
 #endif

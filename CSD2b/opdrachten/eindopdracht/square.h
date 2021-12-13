@@ -7,15 +7,12 @@ class Square : public Oscillator
 {
 public:
   //Constructor and destructor
-  Square(float frequency);
+  Square();
+  Square(float frequency, double amplitude);
   ~Square();
 
   //calculate waveform
-  void calculate() override;
-
-private:
-  float amplitude = 1.0;
-  float phase = 0;
+  void calcNextSample() override;
 };
 
 #endif

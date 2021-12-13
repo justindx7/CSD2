@@ -5,24 +5,20 @@
 #include "saw.h"
 
 
-SimpleSynth::SimpleSynth(float midiPitch, Oscillator* oscillator)
-    : Synth(midiPitch), oscillator(oscillator)
+SimpleSynth::SimpleSynth(float midiPitch)
+    : Synth(midiPitch), sine(midiToFrequency(midiPitch), 1.0)
 {
 }
 
 SimpleSynth::~SimpleSynth()
 {
-  delete oscillator;
   std::cout << "simpleSynth - destructor\n";
 }
 
-void SimpleSynth::calc()
+void SimpleSynth::calculate()
 {
- double freq = midiToFrequency(midiPitch);
+  sine.tick();
+ setSample(sine.getSample());
 
-    oscillator->setFrequency(freq);
-        oscillator->tick();
 }
-
-
 

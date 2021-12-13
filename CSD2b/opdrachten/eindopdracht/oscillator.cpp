@@ -1,7 +1,8 @@
 #include "oscillator.h"
+#include "synth.h"
 
-Oscillator::Oscillator(float frequency)
-    : frequency(frequency)
+Oscillator::Oscillator(float frequency, double amplitude)
+    : frequency(frequency), amplitude(amplitude)
 {
 }
 
@@ -37,7 +38,18 @@ float Oscillator::getSample()
   return sample;
 }
 
+float Oscillator::getAmplitude()
+{
+  return amplitude;
+}
+
+
 void Oscillator::tick()
 {
-  calculate();
+  phase += getFrequency() / getSampleRate();
+  // wrap the phase so it stays in the interval [0, 1]
+  if (phase > 1)
+    phase -= 1.0;
+  calcNextSample();
+  sample *= amplitude;
 }

@@ -28,13 +28,17 @@ void Synth::setSampleRate(double newSamplerate)
   samplerate = newSamplerate;
 }
 
-void Synth::setSample(float newSample)
+void Synth::setSample(double newSample)
 {
   sample = newSample;
 }
 
+double Synth::getSample()
+{
+  return sample;
+}
+
 void Synth::tick()
 {
-  
-  calc();
+  calculate();
 }

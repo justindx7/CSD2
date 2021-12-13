@@ -7,18 +7,12 @@ class Sine : public Oscillator
 {
 public:
   //Constructor and destructor
-  Sine(float frequency);
+  Sine(float frequency, double amplitude);
   ~Sine();
 
   // calculate waveform
-  void calculate() override;
-
-  //getters and setters
-
 private:
-  float amplitude = 1.0;
-  float phase = 0;
-  // sample contains the current sample
+  void calcNextSample() override;
 };
 
 #endif

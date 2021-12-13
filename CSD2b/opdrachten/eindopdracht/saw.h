@@ -7,15 +7,12 @@ class Saw : public Oscillator
 {
 public:
   //Constructor and destructor
-  Saw(float frequency);
+  Saw();
+  Saw(float frequency, double amplitude);
   ~Saw();
 
 //calculate wave form
-  void calculate() override;
-
-private:
-  float amplitude = 1.0;
-  float phase = 0;
+  void calcNextSample() override;
 };
 
 #endif

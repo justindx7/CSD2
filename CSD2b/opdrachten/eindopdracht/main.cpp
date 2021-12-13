@@ -5,7 +5,11 @@
 #include "math.h"
 #include "oscillator.h"
 #include "simpleSynth.h"
+#include "squareSynth.h"
 #include "sine.h"
+#include "synth.h"
+#include "saw.h"
+#include "square.h"
 #include "writeToFile.h"
 
 /*
@@ -17,24 +21,23 @@
  */
 
 //assignFunction for telling jack what wave forms to play
-void assignFunction(JackModule &jack, std::vector<Oscillator*> &oscillators, float &amplitude)
+
+void assignFunction(JackModule &jack, std::vector<Synth*> &synths)
 {
  //assign a function to the JackModule::onProces
-  jack.onProcess = [&oscillators, &amplitude](jack_default_audio_sample_t *inBuf,
+  jack.onProcess = [&synths](jack_default_audio_sample_t *inBuf,
     jack_default_audio_sample_t *outBuf, jack_nframes_t nframes) {
 
     for (unsigned int i = 0; i < nframes; i++) {
       outBuf[i] = 0;
-      for (auto osc : oscillators) {
-        outBuf[i] += osc->getSample() * amplitude;
-        osc->tick();
+      for (auto synth : synths) {
+        outBuf[i] += synth->getSample();
+        synth->tick();
       }
     }
-    amplitude = 0.5;
     return 0;
   };
 }
-
 
 int main(int argc,char **argv)
 {
@@ -44,17 +47,18 @@ int main(int argc,char **argv)
   // init the jack, use program name as JACK client name
   jack.init(argv[0]);
 
+  //set a global sample rate for all synths
   Synth::setSampleRate(jack.getSamplerate());
-  auto oscillator = new Sine(440);
-  SimpleSynth simple(64, oscillator);
 
-  //create a vector and fill it with pointers to subclasses from Oscillator
+  // create a synth
+  SquareSynth squareSynth(50);
 
-  std::vector<Oscillator*> oscillators { oscillator };
-  float amplitude = 0.15;
-  assignFunction(jack, oscillators, amplitude);
+  //create a vector and fill it with pointers to subclasses from Synth so you can play multiple synths at the same time
+
+  std::vector<Synth*> synths {new SquareSynth(60)};
+  assignFunction(jack, synths);
   jack.autoConnect();
-  
+ 
   //keep the program running and listen for user input, q = quit
   std::cout << "\n\nPress 'q' when you want to quit the program.\n";
   bool running = true;
@@ -71,16 +75,14 @@ int main(int argc,char **argv)
 
   //WRITING DATA TO FILE
   WriteToFile fileWriter("output.csv", true);
-
-  for (auto osc : oscillators)
+  for (int i = 0; i < 500; i++)
   {
-    for (int i = 0; i < Synth::getSampleRate(); i++)
-    {
-      fileWriter.write(std::to_string(osc->getSample()) + "\n");
-      osc->tick();
-    }
+      auto sample = squareSynth.getSample();
+      fileWriter.write(std::to_string(sample) + "\n");
+      std::cout << sample << " ";
+      squareSynth.tick();
   }
-  //CALLING destructors
+  std::cout << std::endl;
   //end the program
   return 0;
 } // main()
