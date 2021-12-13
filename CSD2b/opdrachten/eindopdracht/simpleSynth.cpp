@@ -1,12 +1,10 @@
 #include "simpleSynth.h"
 #include <math.h>
-#include "sine.h"
-#include "square.h"
 #include "saw.h"
 
 
 SimpleSynth::SimpleSynth(float midiPitch)
-    : Synth(midiPitch), sine(midiToFrequency(midiPitch), 1.0)
+    : Synth(midiPitch), saw(midiToFrequency(midiPitch), 1.0)
 {
 }
 
@@ -17,8 +15,8 @@ SimpleSynth::~SimpleSynth()
 
 void SimpleSynth::calculate()
 {
-  sine.tick();
- setSample(sine.getSample());
+  saw.tick();
+ setSample(saw.getSample());
 
 }
 

@@ -4,7 +4,7 @@
 #include "oscillator.h"
 #include "synth.h"
 #include "jack_module.h"
-#include "sine.h"
+#include "saw.h"
 
 
 
@@ -16,7 +16,7 @@ public:
 
 private:
     void calculate() override;
-    Sine sine;
+    Saw saw;
 };
 
 #endif

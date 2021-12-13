@@ -9,8 +9,8 @@ std::vector<Oscillator*> SquareSynth::createOscillators(float frequency, double 
 {
   //TODO write for loop and array to automaticaly set freq and amp for each osc
   std::vector<Oscillator*> oscillators;
-  oscillators.push_back(new Square(frequency - 20, amplitude));
-  oscillators.push_back(new Square(frequency + 20,amplitude));
+  oscillators.push_back(new Square(frequency - 5, amplitude));
+  oscillators.push_back(new Square(frequency + 5,amplitude));
   return oscillators;
 }
 
@@ -37,6 +37,7 @@ void SquareSynth::calculate()
   for (auto osc : oscillators)
   {
     osc->tick();
+    //amplitudes gets divided by the amount of oscillators so the amps dont stack up
     sample += osc->getSample() * osc->getAmplitude() / oscillators.size();
   }
   setSample(sample);
