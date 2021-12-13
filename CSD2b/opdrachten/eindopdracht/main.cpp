@@ -6,6 +6,8 @@
 #include "oscillator.h"
 #include "simpleSynth.h"
 #include "squareSynth.h"
+#include "adSynth.h"
+
 #include "sine.h"
 #include "synth.h"
 #include "saw.h"
@@ -26,7 +28,7 @@ void assignFunction(JackModule &jack, std::vector<Synth *> &synths)
 {
   //assign a function to the JackModule::onProces
   jack.onProcess = [&synths](jack_default_audio_sample_t *inBuf,
-                             jack_default_audio_sample_t *outBuf, jack_nframes_t nframes)
+  jack_default_audio_sample_t *outBuf, jack_nframes_t nframes)
   {
     for (unsigned int i = 0; i < nframes; i++)
     {
@@ -57,7 +59,7 @@ int main(int argc, char **argv)
   SquareSynth squareSynth(60);
 
   //create a vector and fill it with pointers to subclasses from Synth so you can play multiple synths at the same time
-  std::vector<Synth *> synths{new SimpleSynth(65), new SquareSynth(60)};
+  std::vector<Synth *> synths{new AdSynth(60)};
   assignFunction(jack, synths);
   jack.autoConnect();
 
@@ -78,7 +80,6 @@ int main(int argc, char **argv)
   //WRITING DATA TO FILE
   WriteToFile fileWriter("output.csv", true);
 
-
   // Print wave form how its played
   for (int i = 0; i < 500; i++)
   {
@@ -90,7 +91,7 @@ int main(int argc, char **argv)
       synth->tick();
     }
   }
-// Print wave that are played after one a nother
+  // Print wave that are played after one a nother
   for (auto synth : synths)
   {
     for (int i = 0; i < 500; i++)
