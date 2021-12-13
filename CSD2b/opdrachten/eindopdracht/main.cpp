@@ -56,8 +56,6 @@ int main(int argc, char **argv)
   //set a global sample rate for all synths
   Synth::setSampleRate(jack.getSamplerate());
 
-  SquareSynth squareSynth(60);
-
   //create a vector and fill it with pointers to subclasses from Synth so you can play multiple synths at the same time
   std::vector<Synth *> synths{new AdSynth(60)};
   assignFunction(jack, synths);
@@ -103,6 +101,11 @@ int main(int argc, char **argv)
     }
   }
   std::cout << std::endl;
+
+  //destroy synths
+  for(auto synth: synths){
+    delete synth;
+  }
   //end the program
   return 0;
 } // main()
