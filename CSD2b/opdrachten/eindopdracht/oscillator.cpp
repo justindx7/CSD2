@@ -11,7 +11,6 @@ Oscillator::~Oscillator()
   std::cout << "Oscillator - destructor\n";
 }
 
-//getters and setters
 void Oscillator::setFrequency(float newFrequency)
 {
   // TODO add check to see if parameter is valid
@@ -43,7 +42,7 @@ float Oscillator::getAmplitude()
   return amplitude;
 }
 
-
+//make a sample
 void Oscillator::tick()
 {
   phase += getFrequency() / getSampleRate();

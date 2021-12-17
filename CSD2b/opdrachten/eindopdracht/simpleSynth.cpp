@@ -19,4 +19,8 @@ void SimpleSynth::calculate()
  setSample(saw.getSample());
 
 }
+void SimpleSynth::updateFrequency(double freq)
+{
+  saw.setFrequency(freq);
+}
 

@@ -10,6 +10,7 @@ public:
     // if a class has virtual functions its destructor should also be virtual
     virtual ~Oscillator();
 
+    // setters and getters
     void setFrequency(float frequency);
     float getFrequency();
 
@@ -20,6 +21,7 @@ public:
 
     float getAmplitude();
     
+     
     void tick();
 
 

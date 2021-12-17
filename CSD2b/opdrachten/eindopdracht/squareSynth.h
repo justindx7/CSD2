@@ -19,9 +19,13 @@ public:
 
 private:
     void calculate() override;
-    static std::vector<Oscillator*> createOscillators(float frequency, double amplitude);
+    void updateFrequency(double freq) override;
+
+    std::vector<Oscillator*> createOscillators(float frequency, double amplitude);
 
     std::vector<Oscillator*> oscillators;
+
+    double detune[2] = {-5,5};
 };
 
 #endif

@@ -13,6 +13,7 @@
 #include "saw.h"
 #include "square.h"
 #include "writeToFile.h"
+#include "melody.h"
 
 /*
  * NOTE: jack2 needs to be installed
@@ -24,22 +25,33 @@
 
 //assignFunction for telling jack what wave forms to play
 
-void assignFunction(JackModule &jack, std::vector<Synth *> &synths)
+void assignFunction(JackModule &jack, std::vector<Synth*> &synths)
 {
   //assign a function to the JackModule::onProces
   jack.onProcess = [&synths](jack_default_audio_sample_t *inBuf,
   jack_default_audio_sample_t *outBuf, jack_nframes_t nframes)
   {
+    int  interval = 0.5 * 44100;
+    int frameCount = 0;
     for (unsigned int i = 0; i < nframes; i++)
     {
+      frameCount++;
       outBuf[i] = 0;
       for (auto synth : synths)
       {
+        synth->setMidiPitch(80.0);
         outBuf[i] += synth->getSample();
         synth->tick();
+
+        if(frameCount > interval){
+        frameCount = 0;
+        }
       }
       //we do this because we use the amplitudes in the oscillator classes
       outBuf[i] /= synths.size();
+
+
+
     }
     return 0;
   };
@@ -57,7 +69,7 @@ int main(int argc, char **argv)
   Synth::setSampleRate(jack.getSamplerate());
 
   //create a vector and fill it with pointers to subclasses from Synth so you can play multiple synths at the same time
-  std::vector<Synth *> synths{new AdSynth(60)};
+  std::vector<Synth *> synths{new SquareSynth(30)};
   assignFunction(jack, synths);
   jack.autoConnect();
 
@@ -105,6 +117,7 @@ int main(int argc, char **argv)
   //destroy synths
   for(auto synth: synths){
     delete synth;
+    synth = nullptr;
   }
   //end the program
   return 0;

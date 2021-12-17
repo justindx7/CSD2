@@ -2,13 +2,13 @@
 
 double Synth::samplerate = 0;
 
-Synth::Synth(float midiPitch) :  midiPitch(midiPitch)
+Synth::Synth(float midiPitch) : midiPitch(midiPitch)
 {
 }
 
 Synth::~Synth()
 {
-    std::cout << "Synth - destructor\n";
+  std::cout << "Synth - destructor\n";
 }
 
 double Synth::midiToFrequency(float pitch)
@@ -16,7 +16,6 @@ double Synth::midiToFrequency(float pitch)
   // turns midi note into frequency
   return pow(2.0, (float(pitch) - 69.0) / 12.0) * 440.0;
 }
-
 
 double Synth::getSampleRate()
 {
@@ -31,6 +30,14 @@ void Synth::setSampleRate(double newSamplerate)
 void Synth::setSample(double newSample)
 {
   sample = newSample;
+}
+
+void Synth::setMidiPitch(float pitch)
+{
+
+  midiPitch = pitch;
+  updateFrequency(midiToFrequency(midiPitch));
+
 }
 
 double Synth::getSample()

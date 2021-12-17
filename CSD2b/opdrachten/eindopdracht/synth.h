@@ -34,6 +34,7 @@ protected:
 
 private:
     virtual void calculate() = 0;
+    virtual void updateFrequency(double freq)= 0;
     float amplitude;
     static double samplerate;
 

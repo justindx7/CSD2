@@ -16,6 +16,7 @@ public:
 
 private:
     void calculate() override;
+    void updateFrequency(double freq) override;
     Saw saw;
 };
 

@@ -6,7 +6,6 @@
 std::vector<Oscillator *> AdSynth::createOscillators(float frequency, double amplitude)
 {
   // write for loop and array to automaticaly set freq and amp for each osc
-  float freqRatios[] = {0.56, 1.56, 0.92, 2.62, 1.19, 1.7, 2.0, 2.74, 3.0, 3.7, 4.07};
 
   std::vector<Oscillator *> oscillators;
   for (int i = 0; i < 10; i++)
@@ -42,4 +41,13 @@ void AdSynth::calculate()
     sample += osc->getSample() * osc->getAmplitude() / oscillators.size();
   }
   setSample(sample);
+}
+void AdSynth::updateFrequency(double freq)
+{
+  int i = 0;
+  for (auto osc : oscillators)
+  {
+    osc->setFrequency(freq * freqRatios[i]);
+    i++;
+  }
 }

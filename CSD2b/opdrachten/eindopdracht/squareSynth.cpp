@@ -26,6 +26,7 @@ SquareSynth::~SquareSynth()
   for (auto osc : oscillators)
   {
     delete osc;
+    osc = nullptr;
   }
   std::cout << "SquareSynth - destructor\n";
 }
@@ -41,4 +42,12 @@ void SquareSynth::calculate()
     sample += osc->getSample() * osc->getAmplitude() / oscillators.size();
   }
   setSample(sample);
+}
+
+void SquareSynth::updateFrequency(double freq){
+  int i = 0;
+  for (auto osc : oscillators){
+    osc->setFrequency(freq + detune[i]);
+    i++;
+  } 
 }
