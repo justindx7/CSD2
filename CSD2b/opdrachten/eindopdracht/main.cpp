@@ -25,33 +25,44 @@
 
 //assignFunction for telling jack what wave forms to play
 
-void assignFunction(JackModule &jack, std::vector<Synth*> &synths)
+void assignFunction(JackModule &jack, std::vector<Synth *> &synths, Melody &melody)
 {
   //assign a function to the JackModule::onProces
-  jack.onProcess = [&synths](jack_default_audio_sample_t *inBuf,
-  jack_default_audio_sample_t *outBuf, jack_nframes_t nframes)
+  jack.onProcess = [&synths,&melody](jack_default_audio_sample_t *inBuf,
+    jack_default_audio_sample_t *outBuf, jack_nframes_t nframes)
   {
-    int  interval = 0.5 * 44100;
-    int frameCount = 0;
+    int interval = 44100 * 0.25;
+    static int frameCount = 0;
+    static int melodyCount = -1;
+
     for (unsigned int i = 0; i < nframes; i++)
     {
       frameCount++;
       outBuf[i] = 0;
+      
+      if (melodyCount == 7)
+      {
+        melodyCount = -1;
+      }
+
       for (auto synth : synths)
       {
-        synth->setMidiPitch(80.0);
         outBuf[i] += synth->getSample();
         synth->tick();
 
-        if(frameCount > interval){
-        frameCount = 0;
+        if (frameCount >= interval)
+        {
+          frameCount = 0;
+          melodyCount++;
+          synth->setMidiPitch(melody.getMelodyList(melodyCount));
+          
+          //std::cout << melody.getMelodyList(melodyCount) << std::endl;
+          //std::cout << melodyCount << std::endl;
+
         }
       }
       //we do this because we use the amplitudes in the oscillator classes
       outBuf[i] /= synths.size();
-
-
-
     }
     return 0;
   };
@@ -62,6 +73,9 @@ int main(int argc, char **argv)
   // create a JackModule instance
   JackModule jack;
 
+  // create a melody list
+  Melody melody;
+
   // init the jack, use program name as JACK client name
   jack.init(argv[0]);
 
@@ -69,8 +83,8 @@ int main(int argc, char **argv)
   Synth::setSampleRate(jack.getSamplerate());
 
   //create a vector and fill it with pointers to subclasses from Synth so you can play multiple synths at the same time
-  std::vector<Synth *> synths{new SquareSynth(30)};
-  assignFunction(jack, synths);
+  std::vector<Synth *> synths{new SquareSynth(80)};
+  assignFunction(jack, synths, melody);
   jack.autoConnect();
 
   //keep the program running and listen for user input, q = quit
@@ -115,7 +129,8 @@ int main(int argc, char **argv)
   std::cout << std::endl;
 
   //destroy synths
-  for(auto synth: synths){
+  for (auto synth : synths)
+  {
     delete synth;
     synth = nullptr;
   }

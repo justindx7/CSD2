@@ -9,8 +9,6 @@
 
 
 
-
-
 class AdSynth : public Synth
 {
 public:
