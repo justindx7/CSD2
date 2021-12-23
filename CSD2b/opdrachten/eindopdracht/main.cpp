@@ -76,6 +76,12 @@ void assignFunction(JackModule &jack, std::vector<Synth *> &synths, Melody &melo
   };
 }
 
+void midiNoteRange()
+{
+  
+}
+
+
 int main(int argc, char **argv)
 {
 
@@ -83,6 +89,7 @@ int main(int argc, char **argv)
   std::string synthsList[4]{"SquareSynth", "ADSynth", "SimpleSynth","All"};
   int synthChoise = UIUtilities::retrieveSelectionIndex(synthsList, 4);
 
+  //SYNTH SELECTION
   std::vector<Synth *> synths{};
   switch(synthChoise)
   {
@@ -109,12 +116,25 @@ int main(int argc, char **argv)
     break;
   }
 
+  //MIDI NOTE RANGE
+  std::cout << "What should the lowest midi note be?" << std::endl;
+  int minMidi = UIUtilities::retrieveValueInRange(0,127);
+  
+  std::cout << "What should the highest midi note be?" << std::endl;
+  int maxMidi = UIUtilities::retrieveValueInRange(0,127);
+
+
 
   // create a JackModule instance
   JackModule jack;
 
-  // create a melody list
+  // create a melody instance
   Melody melody;
+
+  // set lowest and highest note from input and generate melody
+  melody.setlowestMidiNote(minMidi);
+  melody.sethighestMidiNote(maxMidi);
+  melody.generateMelody();
 
   // init the jack, use program name as JACK client name
   jack.init(argv[0]);
@@ -129,8 +149,8 @@ int main(int argc, char **argv)
   assignFunction(jack, synths, melody);
   jack.autoConnect();
 
-  //keep the program running and listen for user input, q = quit
-  std::cout << "\n\nPress 'q' when you want to quit the program.\n";
+  //keep the program running and listen for user input, q = quit, n = new melody, h = help
+  std::cout << "\n\nPress 'h' when you want to see the help menu.\n";
   bool running = true;
   while (running)
   {
@@ -140,6 +160,18 @@ int main(int argc, char **argv)
       running = false;
       jack.end();
       break;
+
+    case 'n':
+      melody.generateMelody();
+      std::cout << "Melody generated!\n";
+    break;
+
+    case 'h':
+      std::cout << "----------------------HELP-----------------------.\n";
+      std::cout << "Press 'q' when you want to quit the program.\n";
+      std::cout << "Press 'n' when you want to generate a new melody.\n";
+      std::cout << "-------------------------------------------------.\n";
+    break;
     }
   }
 

@@ -4,16 +4,16 @@ void Melody::generateMelody()
 {   
     //needed to generate random numbers
     srand(time(NULL));
+
     for (int i = 0; i < noteAmount; i++)
     {
-        int rnd = rand() % 30 + 50;
-         Notes[i] = rnd;
+        int rnd = rand() % ( highestMidiNote - lowestMidiNote + 1 ) + lowestMidiNote;
+        notes[i] = rnd;
     }
 }
 
 Melody::Melody()
 {
-generateMelody();
 }
 
 Melody::~Melody()
@@ -22,5 +22,18 @@ Melody::~Melody()
 
 float Melody::getMelodyList(int count)
 {
-    return Notes[count];
+    return notes[count];
+}
+
+int Melody::getMelodyArrayLength()
+{
+    return noteAmount;
+}
+
+void Melody::sethighestMidiNote(int midiNote){
+    highestMidiNote = midiNote;
+}
+
+void Melody::setlowestMidiNote(int midiNote){
+    lowestMidiNote = midiNote;
 }

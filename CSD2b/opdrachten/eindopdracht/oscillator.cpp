@@ -13,7 +13,6 @@ Oscillator::~Oscillator()
 
 void Oscillator::setFrequency(float newFrequency)
 {
-  // TODO add check to see if parameter is valid
   frequency = newFrequency;
 }
 
