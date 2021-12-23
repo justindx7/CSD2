@@ -14,6 +14,7 @@
 #include "square.h"
 #include "writeToFile.h"
 #include "melody.h"
+#include "uiUtilities.h"
 
 /*
  * NOTE: jack2 needs to be installed
@@ -23,8 +24,8 @@
  * jackd -d coreaudio
  */
 
-//assignFunction for telling jack what wave forms to play
 
+//assignFunction for telling jack what synths to play
 void assignFunction(JackModule &jack, std::vector<Synth *> &synths, Melody &melody)
 {
   //assign a function to the JackModule::onProces
@@ -40,26 +41,33 @@ void assignFunction(JackModule &jack, std::vector<Synth *> &synths, Melody &melo
       frameCount++;
       outBuf[i] = 0;
       
-      if (melodyCount == 7)
+      //Reset melodyCounter if its longer than the MelodyArray from the melody Class
+      if (melodyCount == melody.getMelodyArrayLength() - 1)
       {
         melodyCount = -1;
       }
+      
 
       for (auto synth : synths)
       {
         outBuf[i] += synth->getSample();
         synth->tick();
+      }
 
-        if (frameCount >= interval)
-        {
+      //Check if the framecount >= interval and set to zero
+      if (frameCount >= interval)
+      {
           frameCount = 0;
           melodyCount++;
-          synth->setMidiPitch(melody.getMelodyList(melodyCount));
           
+          //Change midipitch for all synths in the vector
+          for (auto synth : synths)
+          {
+            synth->setMidiPitch(melody.getMelodyList(melodyCount));
+          }
+
           //std::cout << melody.getMelodyList(melodyCount) << std::endl;
           //std::cout << melodyCount << std::endl;
-
-        }
       }
       //we do this because we use the amplitudes in the oscillator classes
       outBuf[i] /= synths.size();
@@ -70,6 +78,38 @@ void assignFunction(JackModule &jack, std::vector<Synth *> &synths, Melody &melo
 
 int main(int argc, char **argv)
 {
+
+  //USER INPUT
+  std::string synthsList[4]{"SquareSynth", "ADSynth", "SimpleSynth","All"};
+  int synthChoise = UIUtilities::retrieveSelectionIndex(synthsList, 4);
+
+  std::vector<Synth *> synths{};
+  switch(synthChoise)
+  {
+    case 0:
+    std::cout <<"Square Synth" << std::endl;
+    synths.push_back(new SquareSynth(80));
+    break;
+
+    case 1:
+      std::cout <<"Additive Synth"<< std::endl;
+      synths.push_back(new AdSynth(80));
+    break;
+
+    case 2:
+      std::cout <<"Simple Synth" << std::endl;
+      synths.push_back(new SimpleSynth(80));
+    break;
+
+    case 3:
+      std::cout <<"ALL Synths" << std::endl;
+      synths.push_back(new SimpleSynth(80));
+      synths.push_back(new SquareSynth(80));
+      synths.push_back(new AdSynth(80));
+    break;
+  }
+
+
   // create a JackModule instance
   JackModule jack;
 
@@ -82,8 +122,10 @@ int main(int argc, char **argv)
   //set a global sample rate for all synths
   Synth::setSampleRate(jack.getSamplerate());
 
+
+
+
   //create a vector and fill it with pointers to subclasses from Synth so you can play multiple synths at the same time
-  std::vector<Synth *> synths{new SquareSynth(80)};
   assignFunction(jack, synths, melody);
   jack.autoConnect();
 
@@ -136,4 +178,4 @@ int main(int argc, char **argv)
   }
   //end the program
   return 0;
-} // main()
+} 
