@@ -6,6 +6,8 @@
 #include "oscillator.h"
 #include "simpleSynth.h"
 #include "squareSynth.h"
+#include "noiseSynth.h"
+
 #include "adSynth.h"
 
 #include "sine.h"
@@ -86,8 +88,8 @@ int main(int argc, char **argv)
 {
 
   //USER INPUT
-  std::string synthsList[4]{"SquareSynth", "ADSynth", "SimpleSynth","All"};
-  int synthChoise = UIUtilities::retrieveSelectionIndex(synthsList, 4);
+  std::string synthsList[5]{"SquareSynth", "ADSynth", "SimpleSynth","NoiseSynth","All"};
+  int synthChoise = UIUtilities::retrieveSelectionIndex(synthsList, 5);
 
   //SYNTH SELECTION
   std::vector<Synth *> synths{};
@@ -109,6 +111,11 @@ int main(int argc, char **argv)
     break;
 
     case 3:
+      std::cout <<"Noise Synth" << std::endl;
+      synths.push_back(new NoiseSynth(80));
+    break;
+
+    case 4:
       std::cout <<"ALL Synths" << std::endl;
       synths.push_back(new SimpleSynth(80));
       synths.push_back(new SquareSynth(80));

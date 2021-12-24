@@ -1,24 +1,24 @@
-#ifndef SIMPLESYNTH_H
-#define SIMPLESYNTH_H
+#ifndef NOISESYNTH_H
+#define NOISESYNTH_H
 #include <iostream>
 #include "oscillator.h"
 #include "synth.h"
 #include "jack_module.h"
-#include "triangle.h"
+#include "noise.h"
 
 
 
 
-class SimpleSynth : public Synth
+class NoiseSynth : public Synth
 {
 public:
-    SimpleSynth(float midiPitch);
-    ~SimpleSynth();
+    NoiseSynth(float midiPitch);
+    ~NoiseSynth();
 
 private:
     void calculate() override;
     void updateFrequency(double freq) override;
-    Triangle triangle;
+    Noise noise;
 };
 
 #endif
