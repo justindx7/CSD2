@@ -4,7 +4,7 @@
 
 
 SimpleSynth::SimpleSynth(float midiPitch)
-    : Synth(midiPitch), saw(midiToFrequency(midiPitch), 1.0)
+    : Synth(midiPitch), triangle(midiToFrequency(midiPitch), 1.0)
 {
 }
 
@@ -15,12 +15,12 @@ SimpleSynth::~SimpleSynth()
 
 void SimpleSynth::calculate()
 {
-  saw.tick();
- setSample(saw.getSample());
+ triangle.tick();
+ setSample(triangle.getSample());
 
 }
 void SimpleSynth::updateFrequency(double freq)
 {
-  saw.setFrequency(freq);
+  triangle.setFrequency(freq);
 }
 

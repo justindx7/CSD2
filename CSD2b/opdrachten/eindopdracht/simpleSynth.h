@@ -4,7 +4,7 @@
 #include "oscillator.h"
 #include "synth.h"
 #include "jack_module.h"
-#include "saw.h"
+#include "triangle.h"
 
 
 
@@ -17,7 +17,7 @@ public:
 private:
     void calculate() override;
     void updateFrequency(double freq) override;
-    Saw saw;
+    Triangle triangle;
 };
 
 #endif
