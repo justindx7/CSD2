@@ -5,15 +5,16 @@ class Effect
 {
 public:
     Effect(float drywet, bool bypass, unsigned int samplerate);
-   virtual ~Effect();
+    virtual ~Effect();
    
-    virtual float process(float sample) = 0;
-
+     virtual float process(float sample) = 0;
+     
 protected:
     float modSignal = 0;
+    float drywet = 1;
 
     private:
-    float drywet;
+    bool bypass = false;
 
     
 };

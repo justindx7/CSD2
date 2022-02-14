@@ -2,12 +2,12 @@ CXX= g++
 CXXFLAGS = -I/usr/local/include -Wall -std=c++1z
 LDFLAGS=-ljack
 # the cpp files from the current project to include
-SRC_PROJECT = tremolo.cpp effectMain.cpp
+SRC_PROJECT = tremolo.cpp effect.cpp effectMain.cpp circBuffer.cpp delay.cpp
 # the directory to the folder with the shared modules
 SHAREDCODE_PATH = ../../sharedCode/
 # the modules to include
 MODULES = oscillators utilities
-TARGET=tremolo
+TARGET=effect
 
 # append shared code path prefix to modules
 MODULE_PATHS = $(addprefix $(SHAREDCODE_PATH),$(MODULES))

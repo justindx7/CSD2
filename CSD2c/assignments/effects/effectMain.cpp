@@ -1,13 +1,16 @@
 #include "tremolo.h"
 #include "effect.h"
+#include "delay.h"
+
 
 #include "writeToFile.h"
 #include "jack_module.h"
 
 
-#define WRITE_TO_FILE 1
+#define WRITE_TO_FILE 0
 #define WRITE_NUM_SAMPLES 44100
 
+//TODO make an more efficient effect baseclass
 int main(int argc, char **argv) {
 
   // create a JackModule instance
@@ -19,8 +22,10 @@ int main(int argc, char **argv) {
   float amplitude = 0.5;
 
   // instantiate tremolo effect
-  Effect* effect;
-  effect = new Tremolo(20,0.5,false, samplerate);
+  //Effect* effect;
+
+  Delay effect(1, false, samplerate, 500, 0.5);
+  //Tremolo effect(1, false, samplerate, 20);
 
 
   #if WRITE_TO_FILE
@@ -31,11 +36,12 @@ int main(int argc, char **argv) {
 
   #else
     // assign a function to the JackModule::onProces
-    jack.onProcess = [&amplitude, &tremolo](jack_default_audio_sample_t* inBuf,
+    jack.onProcess = [&amplitude, &effect](jack_default_audio_sample_t* inBuf,
       jack_default_audio_sample_t* outBuf, jack_nframes_t nframes) {
   #endif
       for(unsigned int i = 0; i < nframes; i++) {
-        outBuf[i] = effect -> process(inBuf[i]) * amplitude;
+        outBuf[i] = effect.process(inBuf[i]) * amplitude;
+        effect.tick();
         // ----- write result to file -----
   #if WRITE_TO_FILE
         static int count = 0;

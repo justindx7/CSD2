@@ -1,11 +1,29 @@
 #include "sine.h"
 #include "tremolo.h"
+#include "saw.h"
+#include "square.h"
 
-Tremolo::Tremolo(float freq, float drywet, bool bypass, unsigned int samplerate) 
-: Effect(drywet, bypass, samplerate)
 
+Tremolo::Tremolo(float drywet, bool bypass, unsigned int samplerate, float freq, WaveformType waveformType) 
+ : Effect(drywet, bypass, samplerate)
 {
-osc = new Sine(freq, samplerate);
+switch(waveformType){
+  case WaveformType::SINE:
+  {
+  osc = new Sine(freq, samplerate);
+  break; 
+  }
+  case WaveformType::SAW:
+  {
+  osc = new Saw(freq, samplerate);
+  break; 
+  }
+  case WaveformType::SQUARE:
+  {
+  osc = new Square(freq, samplerate);
+  break; 
+  }
+}
 }
 
 Tremolo::~Tremolo()
@@ -22,5 +40,8 @@ void Tremolo::setModFreq(float freq)
 float Tremolo::process(float sample)
 {
   modSignal = (osc->genNextSample() + 1.0f) * 0.5f;
+  //drywet signal
+  modSignal *= drywet;
+  modSignal += 1.0 - drywet;
  return  sample * modSignal;
 }

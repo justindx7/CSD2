@@ -7,14 +7,22 @@
 class Tremolo : public Effect
 {
 public:
-    Tremolo(float freq, float drywet, bool bypass, unsigned int samplerate);
+  enum WaveformType {
+    SINE = 0, // ensure enum starts at 0
+    SAW,
+    SQUARE,
+    SIZE // 3
+  };
+    Tremolo(float drywet, bool bypass, 
+    unsigned int samplerate, float freq, WaveformType waveformType = WaveformType::SINE);
     ~Tremolo();
 
 
     //setters and getters
     void setModFreq(float freq);
-    
-    private:
     float process(float sample) override;
+
+    private:
     Oscillator* osc;
+    float modSignal;
 };
