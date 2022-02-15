@@ -14,11 +14,11 @@ Delay::~Delay()
 
 float Delay::process(float sample)
 {
-  circBuffer.write(sample + (output * feedback));
-  output = circBuffer.read();
-  output *= drywet;
-  output += sample + 1.0 - drywet;
- return output;
+  circBuffer.write(sample + (modSignal * feedback));
+  modSignal = circBuffer.read();
+  modSignal *= getDrywet();
+  modSignal += sample + 1.0 - getDrywet();
+ return modSignal;
 }
 
 void Delay::tick()

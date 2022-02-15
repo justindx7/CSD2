@@ -12,19 +12,17 @@ class Delay : public Effect
  //setters and getters
  void setFeedback(float _feedback);
  void setDelayTime(float ms);
-
-
+ void tick() override;
+ //when baseclass is better u can make this private
 float process(float sample) override;
-void tick();
 
+private:
 float MStoSample(float ms);
 
 
 //output sample
-float output = 0;
 float feedback = 0;
 float samplerate;
 
 CircBuffer circBuffer;
-
 };
