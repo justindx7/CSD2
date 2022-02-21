@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
   
   //add effect to vector of effect pointers and put the bypass true
   effects.push_back(new Delay(1, true, samplerate, 500, 0.5));
-  effects.push_back(new Tremolo(1, true, samplerate, 200));
+  effects.push_back(new Tremolo(1, true, samplerate, 80));
   
   #if WRITE_TO_FILE
         WriteToFile fileWriter("output.csv", true);
@@ -53,11 +53,12 @@ int main(int argc, char **argv) {
     jack.onProcess = [&amplitude, &effects](jack_default_audio_sample_t* inBuf,
       jack_default_audio_sample_t* outBuf, jack_nframes_t nframes) {
   #endif
-      for(unsigned int i = 0; i < nframes; i++) {
-        for(auto effect : effects){
-        outBuf[i] = effect->processFrame(inBuf[i]) * amplitude;
-        effect->tick();
-        }
+      for(unsigned int i = 0; i < nframes; i++) { 
+        //output of last sample into input of next effect
+        //TODO make this better maybe use a decorator pattern     
+        outBuf[i] = effects[0]->processFrame(effects[1]->processFrame(inBuf[i] * amplitude));
+        effects[0]->tick();
+
         // ----- write result to file -----
   #if WRITE_TO_FILE
         static int count = 0;
