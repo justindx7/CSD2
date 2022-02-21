@@ -4,11 +4,6 @@
 #include "uiUtilities.h"
 #include <string>
 #include <vector>
-
-
-
-
-
 #include "writeToFile.h"
 #include "jack_module.h"
 
@@ -55,7 +50,7 @@ int main(int argc, char **argv) {
   #endif
       for(unsigned int i = 0; i < nframes; i++) { 
         //output of last sample into input of next effect
-        //TODO make this better maybe use a decorator pattern     
+        //TODO make this better maybe use a decorator pattern this is bad   
         outBuf[i] = effects[0]->processFrame(effects[1]->processFrame(inBuf[i] * amplitude));
         effects[0]->tick();
 

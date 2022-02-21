@@ -48,6 +48,8 @@ float Tremolo::process(float sample)
 
 void Tremolo::setParameter(std::string id, float val)
 {
+  //TODO add switch for different waveforms 
+
     //TODO ADD CHECK INPUT
     if(id == "modFreq"){
         setModFreq(val);
