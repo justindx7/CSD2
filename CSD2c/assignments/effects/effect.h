@@ -1,21 +1,21 @@
 #pragma once
 #include <iostream>
+#include <string>
 
 class Effect 
 {
 public:
     Effect(float drywet, bool bypass, unsigned int samplerate);
     virtual ~Effect();
-   
-public:
-     float processFrame(float sample);
+        float processFrame(float sample);
      virtual void tick() = 0;
 
      //setters getters
      void setDrywet(float _drywet);
      float getDrywet();
-
      void setBypass(bool _bypass);
+     virtual void setParameter(std::string id, float val) =  0;
+
      
 protected:
     virtual float process(float sample) = 0;

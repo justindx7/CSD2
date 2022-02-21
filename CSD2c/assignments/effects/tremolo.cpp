@@ -45,3 +45,15 @@ float Tremolo::process(float sample)
   modSignal += 1.0 - getDrywet();
  return  sample * modSignal;
 }
+
+void Tremolo::setParameter(std::string id, float val)
+{
+    //TODO ADD CHECK INPUT
+    if(id == "modFreq"){
+        setModFreq(val);
+        std::cout << "tremolo modulation frequency change to: " << val << "Hz" << std::endl;
+    }
+}
+
+//do nothing
+void Tremolo::tick(){}

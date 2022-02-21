@@ -28,3 +28,5 @@ void Effect::setBypass(bool _bypass)
 {
     bypass = _bypass;
 }
+// so you can change settings of all effects if not overriden do nothing
+void Effect::setParameter(std::string id, float val){}

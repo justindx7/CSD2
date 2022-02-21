@@ -41,5 +41,27 @@ return samplerate * (ms / 1000);
 
 void Delay::setDelayTime(float ms)
 {
+    //TODO use lineair interpolation to not have clicks while changing time
     circBuffer.setDistanceRW(MStoSample(ms));
+}
+// get a name and an value and check input then change value
+void Delay::setParameter(std::string id, float val)
+{
+    if(id == "delayTime"){
+        if(val <= 1000){
+        setDelayTime(val);
+        }
+        else{
+            std::cout << "delay time cant be higher than size" << std::endl;
+        }
+    }
+    if(id == "feedback"){
+        if(val < 1.0F){
+        setFeedback(val);
+        std::cout << "feedback: " << val << std::endl;
+        }
+        else{
+            std::cout << "feedback cant be higher than 0.9" << std::endl;
+        }
+    }
 }

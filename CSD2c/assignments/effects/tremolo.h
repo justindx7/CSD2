@@ -21,6 +21,8 @@ public:
     //setters and getters
     void setModFreq(float freq);
     float process(float sample) override;
+    void setParameter(std::string id, float val) override;
+    void tick() override;
 
     private:
     Oscillator* osc;

@@ -9,15 +9,14 @@ class Delay : public Effect
  Delay(float drywet, bool bypass, unsigned int samplerate, int delayMS, float feedback);
  ~Delay();
  
- //setters and getters
- void setFeedback(float _feedback);
- void setDelayTime(float ms);
- void tick() override;
- //when baseclass is better u can make this private
-float process(float sample) override;
-
 private:
+void setParameter(std::string id, float val) override;
+void tick() override;
+float process(float sample) override;
 float MStoSample(float ms);
+ //setters and getters
+void setFeedback(float _feedback);
+void setDelayTime(float ms);
 
 
 //output sample
