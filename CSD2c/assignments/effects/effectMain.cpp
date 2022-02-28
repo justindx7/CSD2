@@ -1,6 +1,7 @@
 #include "tremolo.h"
 #include "effect.h"
 #include "delay.h"
+#include "waveShaper.h"
 #include "uiUtilities.h"
 #include <string>
 #include <vector>
@@ -41,9 +42,9 @@ float *inBuf = new float[chunksize];
     jack.readSamples(inBuf, chunksize);
     for(unsigned int i = 0; i < chunksize; i ++){      
       //left channel
-      outBuf[2 *i] = effects[0]->processFrame(inBuf[i] * amplitude);
+      outBuf[2 *i] = effects[3]->processFrame(inBuf[i] * amplitude);
       //right channel
-      outBuf[2 *i+1] = effects[2]->processFrame(inBuf[i] * amplitude);
+      outBuf[2 *i+1] = effects[3]->processFrame(inBuf[i] * amplitude);
       //tick the delay
       effects[0]->tick();
       effects[2]-> tick();
@@ -72,6 +73,7 @@ int main(int argc, char **argv)
   effects.push_back(new Delay(1, false, samplerate, 400, 0.5));
   effects.push_back(new Tremolo(1, false, samplerate, 80));
   effects.push_back(new Delay(1, false, samplerate, 800, 0.5));
+  effects.push_back(new WaveShaper(1,false,samplerate));
 
   //new thread 
     std::thread filterThread(filter);
