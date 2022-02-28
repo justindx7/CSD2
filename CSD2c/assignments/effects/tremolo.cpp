@@ -40,9 +40,6 @@ void Tremolo::setModFreq(float freq)
 float Tremolo::process(float sample)
 {
   modSignal = (osc->genNextSample() + 1.0f) * 0.5f;
-  //drywet signal
-  modSignal *= getDrywet();
-  modSignal += 1.0 - getDrywet();
  return  sample * modSignal;
 }
 

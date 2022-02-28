@@ -17,8 +17,6 @@ float Delay::process(float sample)
 {
   circBuffer.write(sample + (modSignal * feedback));
   modSignal = circBuffer.read();
-  modSignal *= getDrywet();
-  modSignal += sample + 1.0 - getDrywet();
  return modSignal;
 }
 

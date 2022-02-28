@@ -9,7 +9,13 @@ Effect::~Effect()
 }
 float Effect::processFrame(float sample)
 {
-    return (bypass) ? sample : process(sample);
+    float output;
+    //DRYWET
+    output = process(sample);
+    output *= getDrywet();
+    output += sample + 1.0 - getDrywet();
+    
+    return (bypass) ? sample : output;
 }
 
 // virtual tick do nothing if not overriden
