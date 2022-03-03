@@ -1,3 +1,4 @@
+#pragma once
 #include "effect.h"
 
 class WaveShaper : public Effect {

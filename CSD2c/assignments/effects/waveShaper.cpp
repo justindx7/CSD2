@@ -31,8 +31,8 @@ float WaveShaper::linMap(float value, int low, int high)
 
 float WaveShaper::process(float sample)
 {
-    float index = mapInRange(sample, -1, 1, 0, bufferSize -1);
-    int i = (int) index;
+    float index = mapInRange(sample, -1, 1, 0, bufferSize -1) + 0.5;
+    int i = (int)index;
     float indexDecimal = index - (float)i;
     return linMap(indexDecimal, buffer[i], buffer[i + 1]);
 }

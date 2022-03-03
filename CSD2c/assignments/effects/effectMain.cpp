@@ -2,6 +2,7 @@
 #include "effect.h"
 #include "delay.h"
 #include "waveShaper.h"
+#include "chorus.h"
 #include "uiUtilities.h"
 #include <string>
 #include <vector>
@@ -42,12 +43,12 @@ float *inBuf = new float[chunksize];
     jack.readSamples(inBuf, chunksize);
     for(unsigned int i = 0; i < chunksize; i ++){      
       //left channel
-      outBuf[2 *i] = effects[3]->processFrame(inBuf[i] * amplitude);
+      outBuf[2 *i] = effects[4]->processFrame(inBuf[i] * amplitude);
       //right channel
-      outBuf[2 *i+1] = effects[3]->processFrame(inBuf[i] * amplitude);
+      outBuf[2 *i+1] = effects[5]->processFrame(inBuf[i] * amplitude);
       //tick the delay
-      effects[0]->tick();
-      effects[2]-> tick();
+      effects[4]->tick();
+      effects[5]-> tick();
     }
     jack.writeSamples(outBuf,chunksize *2);
   } while (running);
@@ -56,9 +57,6 @@ float *inBuf = new float[chunksize];
 
 int main(int argc, char **argv)
 {
-
-
-
   // set the amount of interleaved jack channels
   jack.setNumberOfInputChannels(1);
   jack.setNumberOfOutputChannels(2);
@@ -70,10 +68,17 @@ int main(int argc, char **argv)
 
 
     // add effect to vector of effect pointers.
-  effects.push_back(new Delay(1, false, samplerate, 400, 0.5));
+  effects.push_back(new Delay(1, true, samplerate, 400, 0.5));
   effects.push_back(new Tremolo(1, false, samplerate, 80));
   effects.push_back(new Delay(1, false, samplerate, 800, 0.5));
   effects.push_back(new WaveShaper(1,false,samplerate));
+
+  effects.push_back(new Chorus(0.5, false, samplerate, 0.8, true, 0.8));
+  effects.push_back(new Chorus(0.5, false, samplerate, 0.8, false, 0.4));
+  
+  effects[4]->setParameter("modDepth", 200);
+  effects[5]->setParameter("modDepth", 205);
+
 
   //new thread 
     std::thread filterThread(filter);
