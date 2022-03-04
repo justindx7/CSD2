@@ -73,11 +73,11 @@ int main(int argc, char **argv)
   effects.push_back(new Delay(1, false, samplerate, 800, 0.5));
   effects.push_back(new WaveShaper(1,false,samplerate));
 
-  effects.push_back(new Chorus(0.5, false, samplerate, 0.8, true, 0.8));
-  effects.push_back(new Chorus(0.5, false, samplerate, 0.8, false, 0.4));
+  effects.push_back(new Chorus(0.5, false, samplerate, 0.4, true, 0.8));
+  effects.push_back(new Chorus(0.5, false, samplerate, 0.8, false, 0.8));
   
-  effects[4]->setParameter("modDepth", 200);
-  effects[5]->setParameter("modDepth", 205);
+  effects[4]->setParameter("modDepth", 250);
+  effects[5]->setParameter("modDepth", 255);
 
 
   //new thread 

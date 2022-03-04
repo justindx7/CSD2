@@ -31,8 +31,6 @@ float Chorus::process(float sample)
 {
   //modulation of delay time osc from 0 to 1 otherwise you would need an Delorean with flux capacitor
     modSignal = (osc->genNextSample() + 1) * 0.5 * modDepth; 
-    modSignal += 0.5;
-    modSignal = (int)modSignal;
     circBuffer.setDistanceRW(modSignal + offset);
 
     float modSample = 0;
