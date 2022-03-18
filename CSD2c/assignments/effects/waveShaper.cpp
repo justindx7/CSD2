@@ -7,7 +7,7 @@ float buffer[bufferSize];
 WaveShaper::WaveShaper(float drywet, bool bypass, unsigned int samplerate)
 : Effect(drywet, bypass, samplerate)
 {
-    WavetableGenerator::generateSCurve(buffer, bufferSize, 2.0F);
+    WavetableGenerator::generateSCurve(buffer, bufferSize, 50.0F);
 }
 
 WaveShaper::~WaveShaper()
@@ -32,6 +32,7 @@ float WaveShaper::linMap(float value, int low, int high)
 float WaveShaper::process(float sample)
 {
     float index = mapInRange(sample, -1, 1, 0, bufferSize -1) + 0.5;
+    
     int i = (int)index;
     float indexDecimal = index - (float)i;
     return linMap(indexDecimal, buffer[i], buffer[i + 1]);

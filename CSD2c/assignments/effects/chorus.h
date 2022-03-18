@@ -30,4 +30,6 @@ public:
     bool invertPolarity;
     float feedback;
     float modFreq;
+
+    float modSample = 0;
 };
