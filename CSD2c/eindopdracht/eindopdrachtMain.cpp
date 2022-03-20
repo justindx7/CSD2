@@ -1,9 +1,10 @@
 #include <thread>
 #include <iostream>
-
+#include <vector>
 #include <unistd.h> // sleep
 #include "jack_module.h"
-
+#include "effect.h"
+#include "chorus.h"
 
 #define WRITE_NUM_SAMPLES 44100
 
@@ -20,6 +21,9 @@ float amplitude = 0.5;
 // create a JackModule instance
 JackModule jack;
 
+std::vector <Effect *> effects{};
+
+
 static void connectToJack()
 {
     float *inBuf = new float[chunksize];
@@ -31,10 +35,10 @@ static void connectToJack()
         {
 
             // LEFT CHANNEL
-            outBuf[2 * i] = inBuf[i]; // effect code here
+            outBuf[2 * i] = effects[0]->process(inBuf[i] * amplitude); // effect code here
 
             // RIGHT CHANNEL
-            outBuf[2 * i + 1] = inBuf[i]; // effect code here
+            outBuf[2 * i + 1] =effects[1]->process(inBuf[i] * amplitude); // effect code here
 
         }
         jack.writeSamples(outBuf, chunksize * 2);
@@ -52,12 +56,13 @@ int main(int argc, char **argv)
     jack.autoConnect();
     samplerate = jack.getSamplerate();
 
+
+    //here we fill the effect vector with effects
+    effects.push_back(new Chorus(0.5, false, samplerate, 0.4, true, 0.4));
+    effects.push_back(new Chorus(0.5, false, samplerate, 0.8, false, 0.4));  
+
     //new thread 
     std::thread jackThread(connectToJack);
-
-    // for later here we can fill the effect vector
-
-    //
 
   std::cout << "\n\nPress 'q' when you want to end the program.\n";
   while (running)

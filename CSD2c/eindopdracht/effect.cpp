@@ -11,7 +11,7 @@ float Effect::process(float sample)
 {
     float output;
     //DRYWET
-    output = process(sample);
+    output = applyEffect(sample);
     output *= getDrywet();
     output += sample + 1.0 - getDrywet();
     //if bypass true return the input sample if bypass false return the output.

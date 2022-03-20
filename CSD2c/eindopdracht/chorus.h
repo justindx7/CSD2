@@ -21,9 +21,12 @@ public:
     void setModDepth(float val);
     void setRate(float val);
 
+    float mapInRange(float value, float xLow, float xHigh, float yLow, float yHigh);
+    float linMap(float value, float low, float high);
+
     private:
     Oscillator* osc;
-    float modDepth = 250;
+    float modDepth = 215;
     float offset = 88.2;
     CircBuffer circBuffer;
     bool invertPolarity;
