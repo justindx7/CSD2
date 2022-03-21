@@ -22,7 +22,7 @@ public:
 	inline void write(float val) { m_buffer[m_writeH] = val; }
 	inline float read() { return m_buffer[m_readH]; }
 	//used for interpolation
-	inline float readNext(){return m_buffer[m_readH + 1];}
+	inline float readNext() {return m_buffer[m_readH + 1]; }
 
   // method to set a step in time --> move to next sample
   inline void tick() {

@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 
 
     //here we fill the effect vector with effects
-    effects.push_back(new Chorus(0.5, false, samplerate, 0.4, true, 0.4));
+    effects.push_back(new Chorus(0.5, false, samplerate, 0.4, false, 0.4));
     effects.push_back(new Chorus(0.5, false, samplerate, 0.8, false, 0.4));  
 
     //new thread 

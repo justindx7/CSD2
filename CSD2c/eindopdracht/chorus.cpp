@@ -47,9 +47,12 @@ float Chorus::applyEffect(float sample)
     circBuffer.setDistanceRW(LFO + offset);
 
     // feedback loop and bool to invert the polarity
-    float val = (invertPolarity) ?  sample + (modSample * feedback)
+    float val = (invertPolarity) ? sample + (modSample * feedback)
                                  : -sample + (modSample * feedback);
     circBuffer.write(val);
+
+    float index = circBuffer.getDistanceRW();
+
     modSample = circBuffer.read();
     circBuffer.tick();
     return modSample;
@@ -68,7 +71,6 @@ void Chorus::setParameter(std::string id, float val)
     }
 }
 
-
 void Chorus::setFeedback(float _feedback)
 {
     if (_feedback < 1)
@@ -81,4 +83,3 @@ void Chorus::setPolarity(bool _invertPolarity)
 {
     invertPolarity = _invertPolarity;
 }
-
