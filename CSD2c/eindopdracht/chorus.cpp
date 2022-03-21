@@ -27,21 +27,11 @@ void Chorus::setRate(float val)
     val = modFreq;
 }
 
-float Chorus::mapInRange(float value, float xLow, float xHigh, float yLow, float yHigh)
-{
-    float output;
-    output = yLow + (value - xLow) * ((yHigh - yLow) / (xHigh - xLow));
-    return output;
-}
-float Chorus::linMap(float value, float low, float high)
-{
-    float output;
-    output = mapInRange(value, 0, 0, low, high);
-    return output;
-}
-
 float Chorus::applyEffect(float sample)
 {
+    if(sample >=0.7){
+    std::cout << sample << std::endl;
+    }
     // modulation of delay time osc from 0 to 1 otherwise you would need an Delorean with flux capacitor
     LFO = (osc->genNextSample() + 1) * 0.5 * modDepth;
     circBuffer.setDistanceRW(LFO + offset);
