@@ -16,6 +16,6 @@ public:
 private:
     unsigned int samplerate;
     bool peak = false;
-    float peakAmount = 0.15;
+    float peakAmount = 0.2;
     
 };
