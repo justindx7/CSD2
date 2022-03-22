@@ -12,6 +12,6 @@ public:
     // nearest neighbor map
     static float NNMap(float value, int low, int high);
 
-    static float mapInRange(float value, int xLow, int xHigh, int yLow, int yHigh);
-    static float linMap(float value, int low, int high);
+    static float mapInRange(float value, float xLow, float xHigh, float yLow, float yHigh);
+    static float linMap(float value, float low, float high);
 };

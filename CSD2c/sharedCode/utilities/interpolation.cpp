@@ -12,15 +12,15 @@ float Interpolation::NNMap(float value, int low, int high)
     return (value > 0.5) ? low : high;
 }
 
-float Interpolation::mapInRange(float value, int xLow, int xHigh, int yLow, int yHigh)
+float Interpolation::mapInRange(float value, float xLow, float xHigh, float yLow, float yHigh)
 {
     float output;
-    output = yLow + (value - xLow) * ((yHigh - yLow) / (xHigh - xLow));
+    output = yLow + ((yHigh-yLow)/(xHigh-xLow)) * (value - xLow);
     return output;
 }
-float Interpolation::linMap(float value, int low, int high)
+float Interpolation::linMap(float value, float low, float high)
 {
     float output;
-    output = mapInRange(value, 0, 0, low, high);
+    output = mapInRange(value, 0,0,low,high);
     return output;
 }
