@@ -2,19 +2,35 @@
 #include "sine.h"
 
 Tremolo::Tremolo(float drywet, bool bypass,unsigned int samplerate) :
-// Effect(drywet, bypass,samplerate),
-modSig(0)
+Effect(drywet, bypass,samplerate)
 {
+  osc = new Sine(440,samplerate);
   cout << "Tremolo - Constructor " << endl;
 }
 
 Tremolo::~Tremolo()
-{}
+{
+  delete osc;
+  osc = nullptr;
+}
 
-// float Tremolo::applyEffect(float sample)
-// {
-  // return 0;
-// }
+void setModFreq(float val)
+{
+  float modFreq = 0;
+  val = modFreq;
+}
 
-// void setParameter(string id, float val)
-// {}
+float Tremolo::applyEffect(float sample)
+{
+  float modSig = (osc->genNextSample() + 1.0)*0.5;
+  return sample * modSig;
+}
+
+void setParameter(string id, float val)
+{
+  if (id == "setModFreq")
+  {
+      std::cout << val << "\n";
+      setModFreq(val);
+  }
+}
