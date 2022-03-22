@@ -29,9 +29,6 @@ void Chorus::setRate(float val)
 
 float Chorus::applyEffect(float sample)
 {
-    if(sample >=0.7){
-    std::cout << sample << std::endl;
-    }
     // modulation of delay time osc from 0 to 1 otherwise you would need an Delorean with flux capacitor
     LFO = (osc->genNextSample() + 1) * 0.5 * modDepth;
     circBuffer.setDistanceRW(LFO + offset);
@@ -59,6 +56,13 @@ void Chorus::setParameter(std::string id, float val)
     {
         setFeedback(val);
     }
+    if (id == "polar")
+    {
+        setPolarity(val);
+    }
+    if(id =="freq"){
+        osc->setFrequency(val);
+    }
 }
 
 void Chorus::setFeedback(float _feedback)
@@ -72,4 +76,5 @@ void Chorus::setFeedback(float _feedback)
 void Chorus::setPolarity(bool _invertPolarity)
 {
     invertPolarity = _invertPolarity;
+            std::cout << _invertPolarity << std::endl;
 }
