@@ -2,7 +2,7 @@ CXX= g++
 CXXFLAGS = -I/usr/local/include -Wall -std=c++1z
 LDFLAGS=-ljack
 # the cpp files from the current project to include
-SRC_PROJECT = effect.cpp eindopdrachtMain.cpp circBuffer.cpp chorus.cpp tremolo.cpp
+SRC_PROJECT = effect.cpp eindopdrachtMain.cpp circBuffer.cpp chorus.cpp tremolo.cpp sampleShaper.cpp
 # the directory to the folder with the shared modules
 SHAREDCODE_PATH = ../sharedCode/
 # the modules to include

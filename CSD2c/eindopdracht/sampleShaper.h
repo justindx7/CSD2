@@ -1,28 +1,34 @@
 #pragma once
 #include <iostream>
-#include "effect.h"
-#include "AudioFile.h"
 #include <algorithm>
 #include <vector>
-using namespace std;
-#include "writeToFile.h"
+#include "effect.h"
+#include "AudioFile.h"
+#include "interpolation.h"
 
-class SampleShaper : public effect
+class SampleShaper : public Effect
 {
 public:
-  SampleShaper(float drywet,bool bypass);
+  SampleShaper(float drywet,bool bypass, unsigned int samplerate);
   ~SampleShaper();
 
-  void fillBuffer();
+  float applyEffect(float sample) override;
+  void setParameter(std::string id, float val) override;
 
 private:
-  vector<float> v;
+  std::vector<float> v;
+  float* buffer = nullptr; //should be dynamically allocated since there are two ways to fill the buffer
+  Interpolation* interpolate = nullptr;
 
   float floatCount;
+  float drywet;
   int vectorSize;
   int bufSize;
-  void fillBuffer();
-  void sampleAverage();
+  int numSamples;
 
+  void fillBuffer();
+  void calcAverage(); //sampleAverage
+  void allSamples();
+  void pickSample();
 
 };

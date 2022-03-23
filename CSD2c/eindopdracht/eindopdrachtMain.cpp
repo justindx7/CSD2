@@ -6,6 +6,7 @@
 #include "effect.h"
 #include "chorus.h"
 #include "tremolo.h"
+#include "sampleShaper.h"
 
 #define WRITE_NUM_SAMPLES 44100
 
@@ -48,6 +49,7 @@ static void connectToJack()
 
 int main(int argc, char **argv)
 {
+  SampleShaper ss(1,false,samplerate);
     // set the amount of interleaved jack channels
     jack.setNumberOfInputChannels(1);
     jack.setNumberOfOutputChannels(2);
