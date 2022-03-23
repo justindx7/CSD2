@@ -2,19 +2,19 @@
 #include <iostream>
 #include "effect.h"
 #include "oscillator.h"
-using namespace std;
 
 
 class Tremolo : public Effect
 {
 public:
-  Tremolo(float drywet, bool bypass, unsigned int samplerate);
+  Tremolo(float drywet, bool bypass, unsigned int samplerate, float modFreq);
   ~Tremolo();
 
-  void setModFreq(float val);
   float applyEffect(float sample) override;
-  void setParameter(string id, float val) override;
+  void setParameter(std::string id, float val) override;
 
 private:
   Oscillator* osc = nullptr;
+  void setModFreq(float val);
+  float modFreq;
 };

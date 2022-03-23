@@ -48,7 +48,6 @@ static void connectToJack()
 
 int main(int argc, char **argv)
 {
-    Tremolo trem(0.5,false,samplerate);
     // set the amount of interleaved jack channels
     jack.setNumberOfInputChannels(1);
     jack.setNumberOfOutputChannels(2);
@@ -60,8 +59,11 @@ int main(int argc, char **argv)
 
 
     //here we fill the effect vector with effects
-    effects.push_back(new Chorus(0.5, false, samplerate, 0.4, false, 0.4));
-    effects.push_back(new Chorus(0.5, false, samplerate, 0.8, false, 0.4));
+    // effects.push_back(new Chorus(1, false,samplerate,0.5, false, 4));
+    // effects.push_back(new Chorus(1, false,samplerate,0.4, true, 6));
+
+    effects.push_back(new Tremolo(1, false,samplerate,440));
+    effects.push_back(new Tremolo(1, false,samplerate,440));
 
     //new thread
     std::thread jackThread(connectToJack);
