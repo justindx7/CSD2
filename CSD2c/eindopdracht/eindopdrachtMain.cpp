@@ -49,9 +49,9 @@ static void connectToJack()
 
 int main(int argc, char **argv)
 {
-  SampleShaper ss(1,false,samplerate);
-  ss.setParameter("pickSample",0);
-  std::cout << "ss.setParameter() - over \n";
+  // SampleShaper ss(1,false,samplerate);
+  // ss.setParameter("pickSample",0);
+  // std::cout << "ss.setParameter() - over \n";
     // set the amount of interleaved jack channels
     jack.setNumberOfInputChannels(1);
     jack.setNumberOfOutputChannels(2);
@@ -66,11 +66,11 @@ int main(int argc, char **argv)
     // effects.push_back(new Chorus(1, false,samplerate,0.5, false, 4));
     // effects.push_back(new Chorus(1, false,samplerate,0.4, true, 6));
 
-    // effects.push_back(new SampleShaper(1, false,samplerate,440));
-    // effects.push_back(new SampleShaper(1, false,samplerate,440));
+    effects.push_back(new SampleShaper(1, false,samplerate,1));
+    effects.push_back(new SampleShaper(1, false,samplerate,2));
 
     //new thread
-    // std::thread jackThread(connectToJack);
+    std::thread jackThread(connectToJack);
 
   std::cout << "\n\nPress 'q' when you want to end the program.\n";
   while (running)
@@ -85,7 +85,7 @@ int main(int argc, char **argv)
     usleep(100000);
   }
   // end the program
-  // jackThread.join();
-  // jack.end();
+  jackThread.join();
+  jack.end();
   return 0;
 } // main()

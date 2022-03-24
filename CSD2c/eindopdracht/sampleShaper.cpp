@@ -4,13 +4,14 @@
 #include <numeric>
 AudioFile<float> audioFile;
 
-SampleShaper::SampleShaper(float drywet,bool bypass, unsigned int samplerate) :
+SampleShaper::SampleShaper(float drywet,bool bypass, unsigned int samplerate,float k) :
 Effect(drywet,bypass,samplerate),
 floatCount(-1), currentSample(0), begin(0), end(0),
-vectorSize(0), bufSize(0), numSamples(0), channel(0)
+k(k), vectorSize(0), numSamples(0), channel(0)
 {
   std::cout << "SampleShaper - Constructor " << std::endl;
   writeFile = new WriteToFile("output.csv",true);
+  pickSample();
 }
 
 SampleShaper::~SampleShaper()
@@ -109,7 +110,6 @@ void SampleShaper::calcAverage()
     }
     if(floatCount <= 1)
     {
-      float k = 1;
       float normalizeFactor = 1.0f / atan(k);
       float sum  = accumulate(a.begin(),a.end(),0.0f);
       float average = sum/a.size();

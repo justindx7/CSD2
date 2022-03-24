@@ -9,7 +9,7 @@
 class SampleShaper : public Effect
 {
 public:
-  SampleShaper(float drywet,bool bypass, unsigned int samplerate);
+  SampleShaper(float drywet,bool bypass, unsigned int samplerate, float k);
   ~SampleShaper();
 
   float applyEffect(float sample) override;
@@ -26,8 +26,8 @@ private:
   float currentSample;
   float begin;
   float end;
+  float k;
   int vectorSize;
-  int bufSize;
   int numSamples;
   int channel;
   std::string wav;
