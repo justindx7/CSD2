@@ -46,9 +46,22 @@ void SampleShaper::fillBuffer()
   //should be called in pickSample
   //fill buffer with sample
   //pick a samples
-  //fill buffer either with allSamples or averageSample
+  //fill vector either with allSamples or averageSample
   allSamples();
+  vectorSize = v.size();
+  delete buffer;
+  buffer = nullptr;
+  buffer = new float[vectorSize];
+  //delete and make a new buffer since when this function is called the buffer will be a different size
+  for(int i = 0; i< vectorSize; i++)
   //actually fill the buffer
+  {
+    // float s = scale(v[i],begin,end,-1,1);
+    buffer[i] = v[i];
+    // float s  = scale(buffer[i],begin + 1,end + 1,0, 2) -1;
+    // cout << s << "\n\n\n";
+    writeFile->write(std::to_string(buffer[i]) + "\n");
+  }
 }
 
 void SampleShaper::calcAverage()
@@ -77,11 +90,10 @@ void SampleShaper::allSamples()
     {
       // std::cout << "sampleAverage::allSamples - currentSample =" << currentSample <<"\n ";
       v.push_back(currentSample);
-      writeFile->write(std::to_string(currentSample) + "\n");
+      // writeFile->write(std::to_string(currentSample) + "\n");
     }
-    // std::cout << "sampleAverage::allSamples - if statement over" << std::endl;
   }
-  // std::cout << "sampleAverage::allSamples - forloop done" << std::endl;
+  sort(v.begin(), v.end());
 }
 
 void SampleShaper::setParameter(std::string id, float val)
