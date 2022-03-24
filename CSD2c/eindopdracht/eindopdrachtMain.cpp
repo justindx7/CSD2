@@ -51,6 +51,7 @@ int main(int argc, char **argv)
 {
   SampleShaper ss(1,false,samplerate);
   ss.setParameter("pickSample",0);
+  std::cout << "ss.setParameter() - over \n";
     // set the amount of interleaved jack channels
     jack.setNumberOfInputChannels(1);
     jack.setNumberOfOutputChannels(2);
