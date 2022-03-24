@@ -1,11 +1,13 @@
-#include "sampleShaper.h"
-AudioFile<float> audioFile;
-#include <numeric>
 #include "math.h"
+#include "sampleShaper.h"
+#include "interpolation.h"
+#include <numeric>
+AudioFile<float> audioFile;
 
 SampleShaper::SampleShaper(float drywet,bool bypass, unsigned int samplerate) :
 Effect(drywet,bypass,samplerate),
-floatCount(-1), currentSample(0), vectorSize(0), bufSize(0), numSamples(0), channel(0)
+floatCount(-1), currentSample(0), begin(0), end(0),
+vectorSize(0), bufSize(0), numSamples(0), channel(0)
 {
   std::cout << "SampleShaper - Constructor " << std::endl;
   writeFile = new WriteToFile("output.csv",true);
@@ -14,10 +16,8 @@ floatCount(-1), currentSample(0), vectorSize(0), bufSize(0), numSamples(0), chan
 SampleShaper::~SampleShaper()
 {
   delete buffer;
-  delete interpolate;
   delete writeFile;
   buffer = nullptr;
-  interpolate = nullptr;
   writeFile = nullptr;
 }
 
@@ -47,21 +47,31 @@ void SampleShaper::fillBuffer()
   //fill buffer with sample
   //pick a samples
   //fill vector either with allSamples or averageSample
-  allSamples();
+  calcAverage();
+  // allSamples();
   vectorSize = v.size();
+  std::cout << "SampleShaper::fillBuffer - vectorSize = " << vectorSize << std::endl;
   delete buffer;
   buffer = nullptr;
   buffer = new float[vectorSize];
   //delete and make a new buffer since when this function is called the buffer will be a different size
+  begin = v.front();
+  end = v.back();
+  std::cout << "SampleShaper::fillBuffer - begin = " << begin << std::endl;
+  std::cout << "SampleShaper::fillBuffer - end = " << end << std::endl;
+  //use floats begin and end for scaling from [begin,end] to [-1,1]
   for(int i = 0; i< vectorSize; i++)
   //actually fill the buffer
   {
-    // float s = scale(v[i],begin,end,-1,1);
-    buffer[i] = v[i];
-    // float s  = scale(buffer[i],begin + 1,end + 1,0, 2) -1;
-    // cout << s << "\n\n\n";
+    float vectorIndex = v[i];
+    std::cout << "SampleShaper::fillBuffer - vectorIndex = " << vectorIndex << "\n";
+    // float interpolatedValue = Interpolation::mapInRange(vectorIndex,begin,end,-1,1);
+    // std::cout << "SampleShaper::fillBuffer - interpolatedValue = " << interpolatedValue << std::endl;
+    buffer[i] = vectorIndex;
+    std::cout << "SampleShaper::fillBuffer - buffer[i] = " << buffer[i] << "\n\n";
     writeFile->write(std::to_string(buffer[i]) + "\n");
   }
+  v.clear();
 }
 
 void SampleShaper::calcAverage()
@@ -71,6 +81,37 @@ void SampleShaper::calcAverage()
   //delete and then dynamically allocate a buffer + bufSize
   //might use a sigmoid as well in this function??
   //clear the vector
+  std::cout << "SampleShaper::calcAverage" << std::endl;
+  bool running = true;
+  while(running)
+  {
+    for(int i = 0; i < numSamples; i++)
+  //   //walks through the number of samples
+    {
+      currentSample = audioFile.samples[channel][i];
+      if(currentSample < floatCount +0.1 && currentSample > floatCount)
+      {
+        // cout << "if(currentSample < floatCount+0.1 || currentSample > floatCount) " << "if(" << currentSample <<" < "<< floatCount+0.1 << " || " << currentSample << " > " << floatCount << endl;
+        std::cout << "currentSample is within range  [floatCount, floatCount-0.1]  = [" << floatCount+0.1 << ", " << floatCount << "]" << std::endl;
+        std::cout << "currentSample is at number = " << currentSample << "\n\n";
+        a.push_back(currentSample);
+      }
+    }
+    if(floatCount <= 1)
+    {
+      float k = 1;
+      float normalizeFactor = 1.0f / atan(k);
+      float sum  = accumulate(a.begin(),a.end(),0.0f);
+      float average = sum/a.size();
+      std::cout << "SampleShaper::calcAverage - a.size(), sum, average = " << a.size() << ", " << sum << ", " << average << "\n\n";
+      if(average < 1 && average> -1){
+        v.push_back(average);
+      }
+      a.clear();
+      floatCount += 0.1;
+    }
+    else {running = false;}
+  }
 }
 
 void SampleShaper::allSamples()

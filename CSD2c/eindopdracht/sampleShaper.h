@@ -4,7 +4,6 @@
 #include <vector>
 #include "effect.h"
 #include "AudioFile.h"
-#include "interpolation.h"
 #include "writeToFile.h"
 
 class SampleShaper : public Effect
@@ -18,13 +17,15 @@ public:
 
 private:
   std::vector<float> v;
+  std::vector<float> a;
   float* buffer = nullptr; //should be dynamically allocated since there are two ways to fill the buffer
-  Interpolation* interpolate = nullptr;
   WriteToFile* writeFile = nullptr;
 
   float floatCount;
   float drywet;
   float currentSample;
+  float begin;
+  float end;
   int vectorSize;
   int bufSize;
   int numSamples;
