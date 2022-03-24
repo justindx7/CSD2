@@ -14,4 +14,4 @@ void Analyzer::analyseSignal(float sample)
 
 
 bool Analyzer::getPeak(){return peak;}
-float Analyzer::setPeakAmount(float amount){peakAmount = amount;}
+void Analyzer::setPeakAmount(float amount){peakAmount = amount;}

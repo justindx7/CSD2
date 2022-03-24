@@ -11,11 +11,11 @@ public:
 
     //setters and getters
     bool getPeak();
-    float setPeakAmount(float amount);
+    void setPeakAmount(float amount);
 
 private:
     unsigned int samplerate;
     bool peak = false;
-    float peakAmount = 0.2;
+    float peakAmount = 0.17;
     
 };

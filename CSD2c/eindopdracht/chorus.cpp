@@ -37,9 +37,6 @@ float Chorus::applyEffect(float sample)
     float val = (invertPolarity) ? sample + (modSample * feedback)
                                  : -sample + (modSample * feedback);
     circBuffer.write(val);
-
-    float index = circBuffer.getDistanceRW();
-
     modSample = circBuffer.read();
     circBuffer.tick();
     return modSample;
@@ -49,7 +46,6 @@ void Chorus::setParameter(std::string id, float val)
 {
     if (id == "modDepth")
     {
-        std::cout << val << "\n";
         setModDepth(val);
     }
     if (id == "feedback")
