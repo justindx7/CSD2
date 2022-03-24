@@ -25,6 +25,7 @@ private:
   int vectorSize;
   int bufSize;
   int numSamples;
+  std::string wav;
 
   void fillBuffer();
   void calcAverage(); //sampleAverage

@@ -50,6 +50,7 @@ static void connectToJack()
 int main(int argc, char **argv)
 {
   SampleShaper ss(1,false,samplerate);
+  ss.setParameter("pickSample",0);
     // set the amount of interleaved jack channels
     jack.setNumberOfInputChannels(1);
     jack.setNumberOfOutputChannels(2);
@@ -68,7 +69,7 @@ int main(int argc, char **argv)
     effects.push_back(new Tremolo(1, false,samplerate,440));
 
     //new thread
-    std::thread jackThread(connectToJack);
+    // std::thread jackThread(connectToJack);
 
   std::cout << "\n\nPress 'q' when you want to end the program.\n";
   while (running)
@@ -83,7 +84,7 @@ int main(int argc, char **argv)
     usleep(100000);
   }
   // end the program
-  jackThread.join();
-  jack.end();
+  // jackThread.join();
+  // jack.end();
   return 0;
 } // main()

@@ -22,12 +22,14 @@ SampleShaper::~SampleShaper()
 
 float SampleShaper::applyEffect(float sample)
 {
-  //should use interpolation over here 
+  //should use interpolation over here
   return 0;
 }
 
 void SampleShaper::pickSample()
 {
+  audioFile.load(wav);
+  audioFile.printSummary();
   //pick a sample by dragging a wav into terminal
 }
 
@@ -59,4 +61,11 @@ void SampleShaper::allSamples()
 }
 
 void SampleShaper::setParameter(std::string id, float val)
-{}
+{
+  if( id == "pickSample")
+  {
+    std::cin >> wav;
+    std::cout << wav << std::endl;
+    pickSample();
+  }
+}
