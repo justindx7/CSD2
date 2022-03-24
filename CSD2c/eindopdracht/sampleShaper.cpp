@@ -26,13 +26,23 @@ SampleShaper::~SampleShaper()
 float SampleShaper::applyEffect(float sample)
 {
   //should use interpolation over here
-  return 0;
+  sample += 1;
+  // std::cout << "SampleShaper::applyEffect - sample =" << sample <<"\n ";
+  float interpolatedValue = Interpolation::mapInRange(sample,0,2,0,vectorSize);
+  // std::cout << "SampleShaper::applyEffect - interpolatedValue =" << interpolatedValue <<"\n ";
+  // std::cout << "SampleShaper::applyEffect - v.size() =" << vectorSize <<"\n ";
+  int intS = (int) interpolatedValue;
+  // std::cout << "SampleShaper::applyEffect - intS =" << intS <<"\n ";
+  // float y = interpolate(interpolatedValue,intS,intS+1,v[intS],v[intS+1]);
+  float y = Interpolation::linMap(interpolatedValue,v[intS],v[intS+1]);
+  // std::cout << "SampleShaper::applyEffect - y =" << y <<"\n \n";
+  return y;
 }
 
 void SampleShaper::pickSample()
 {
   //pick a sample by dragging a wav into terminal
-  audioFile.load("/Users/Julia/Documents/Atom/HKU/CSD2c/3.les/audio/eigenEffect/samples/OH.wav");
+  audioFile.load("/Users/Julia/Documents/Atom/HKU/CSD2c/3.les/audio/eigenEffect/samples/SUB.wav");
   audioFile.printSummary();
   numSamples = audioFile.getNumSamplesPerChannel();
   numSamples -= 1;
@@ -47,8 +57,8 @@ void SampleShaper::fillBuffer()
   //fill buffer with sample
   //pick a samples
   //fill vector either with allSamples or averageSample
-  calcAverage();
-  // allSamples();
+  // calcAverage();
+  allSamples();
   vectorSize = v.size();
   std::cout << "SampleShaper::fillBuffer - vectorSize = " << vectorSize << std::endl;
   delete buffer;
@@ -65,9 +75,9 @@ void SampleShaper::fillBuffer()
   {
     float vectorIndex = v[i];
     std::cout << "SampleShaper::fillBuffer - vectorIndex = " << vectorIndex << "\n";
-    // float interpolatedValue = Interpolation::mapInRange(vectorIndex,begin,end,-1,1);
+    float interpolatedValue = Interpolation::mapInRange(vectorIndex,begin,end,-1,1);
     // std::cout << "SampleShaper::fillBuffer - interpolatedValue = " << interpolatedValue << std::endl;
-    buffer[i] = vectorIndex;
+    buffer[i] = interpolatedValue;
     std::cout << "SampleShaper::fillBuffer - buffer[i] = " << buffer[i] << "\n\n";
     writeFile->write(std::to_string(buffer[i]) + "\n");
   }
@@ -105,7 +115,7 @@ void SampleShaper::calcAverage()
       float average = sum/a.size();
       std::cout << "SampleShaper::calcAverage - a.size(), sum, average = " << a.size() << ", " << sum << ", " << average << "\n\n";
       if(average < 1 && average> -1){
-        v.push_back(average);
+        v.push_back(normalizeFactor * atan(k * average));
       }
       a.clear();
       floatCount += 0.1;

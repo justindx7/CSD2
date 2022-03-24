@@ -66,8 +66,8 @@ int main(int argc, char **argv)
     // effects.push_back(new Chorus(1, false,samplerate,0.5, false, 4));
     // effects.push_back(new Chorus(1, false,samplerate,0.4, true, 6));
 
-    effects.push_back(new Tremolo(1, false,samplerate,440));
-    effects.push_back(new Tremolo(1, false,samplerate,440));
+    // effects.push_back(new SampleShaper(1, false,samplerate,440));
+    // effects.push_back(new SampleShaper(1, false,samplerate,440));
 
     //new thread
     // std::thread jackThread(connectToJack);
