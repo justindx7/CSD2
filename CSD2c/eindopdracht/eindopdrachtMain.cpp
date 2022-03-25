@@ -20,6 +20,8 @@ float samplerate = 44100; // default
 
 float amplitude = 0.5;
 
+SampleShaper ss(1,false,samplerate,1);
+
 // create a JackModule instance
 JackModule jack;
 
@@ -68,7 +70,7 @@ int main(int argc, char **argv)
 
     effects.push_back(new SampleShaper(1, false,samplerate,1));
     effects.push_back(new SampleShaper(1, false,samplerate,2));
-
+    effects[0]->setParameter("pickSample", 0);
     //new thread
     std::thread jackThread(connectToJack);
 

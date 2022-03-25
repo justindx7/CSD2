@@ -9,7 +9,7 @@
 class SampleShaper : public Effect
 {
 public:
-  SampleShaper(float drywet,bool bypass, unsigned int samplerate, float k);
+  SampleShaper(float drywet,bool bypass, unsigned int samplerate,float k);
   ~SampleShaper();
 
   float applyEffect(float sample) override;
@@ -21,9 +21,10 @@ private:
   float* buffer = nullptr; //should be dynamically allocated since there are two ways to fill the buffer
   WriteToFile* writeFile = nullptr;
 
+  float normalizeFactor;
+  float currentSample;
   float floatCount;
   float drywet;
-  float currentSample;
   float begin;
   float end;
   float k;
