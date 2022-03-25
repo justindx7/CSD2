@@ -1,7 +1,7 @@
 #pragma once
+#include <vector>
 #include <iostream>
 #include <algorithm>
-#include <vector>
 #include "effect.h"
 #include "AudioFile.h"
 #include "writeToFile.h"
@@ -9,7 +9,7 @@
 class SampleShaper : public Effect
 {
 public:
-  SampleShaper(float drywet,bool bypass, unsigned int samplerate,float k);
+  SampleShaper(float drywet,bool bypass, unsigned int samplerate);
   ~SampleShaper();
 
   float applyEffect(float sample) override;
@@ -21,13 +21,11 @@ private:
   float* buffer = nullptr; //should be dynamically allocated since there are two ways to fill the buffer
   WriteToFile* writeFile = nullptr;
 
-  float normalizeFactor;
   float currentSample;
   float floatCount;
   float drywet;
   float begin;
   float end;
-  float k;
   int vectorSize;
   int numSamples;
   int channel;

@@ -4,9 +4,9 @@
 #include <numeric>
 AudioFile<float> audioFile;
 
-SampleShaper::SampleShaper(float drywet,bool bypass, unsigned int samplerate, float k) :
+SampleShaper::SampleShaper(float drywet,bool bypass, unsigned int samplerate) :
 Effect(drywet,bypass,samplerate),
-normalizeFactor(1.0f), currentSample(0), floatCount(-1), begin(0), end(0), k(k),
+currentSample(0), floatCount(-1), drywet(1), begin(0), end(0),
 vectorSize(0), numSamples(0), channel(0)
 {
   writeFile = new WriteToFile("output.csv",true);
@@ -36,7 +36,7 @@ float SampleShaper::applyEffect(float sample)
 void SampleShaper::pickSample()
 {
   //pick a sample by dragging a wav into terminal
-  audioFile.load("/Users/Julia/Documents/Atom/HKU/CSD2c/3.les/audio/eigenEffect/samples/SUB.wav");
+  audioFile.load("/Users/Julia/Documents/Atom/HKU/CSD2c/3.les/audio/eigenEffect/samples/OH.wav");
   audioFile.printSummary();
   numSamples = audioFile.getNumSamplesPerChannel();
   numSamples -= 1;
@@ -47,8 +47,8 @@ void SampleShaper::pickSample()
 
 void SampleShaper::fillBuffer() //add k factor in the forloop in here
 {
-  normalizeFactor /= atan(k);
-  calcAverage();
+  // normalizeFactor /= atan(k);
+  // calcAverage();
   // allSamples();
   vectorSize = v.size();
   delete buffer;
@@ -63,11 +63,14 @@ void SampleShaper::fillBuffer() //add k factor in the forloop in here
   {
     // float vectorIndex = normalizeFactor * atan(k * v[i]);
     float vectorIndex = v[i];
+    // float sigmoid = normalizeFactor * atan(k * vectorIndex);
     float interpolatedValue = Interpolation::mapInRange(vectorIndex,begin,end,-1,1);
     buffer[i] = interpolatedValue;
+    //nog meer interpoleren
     std::cout << "SampleShaper::fillBuffer - buffer[i] = " << buffer[i] << std::endl;
-    std::cout << "SampleShaper::fillBuffer - interpolatedValue = " << interpolatedValue << std::endl;
-    writeFile->write(std::to_string(buffer[i]) + "\n");
+    std::cout << "SampleShaper::fillBuffer - vectorIndex = " << vectorIndex << std::endl;
+    std::cout << "SampleShaper::fillBuffer - interpolatedValue = " << interpolatedValue << "\n\n";
+    writeFile->write(std::to_string(interpolatedValue) + "\n");
   }
   v.clear();
 }
@@ -85,13 +88,14 @@ void SampleShaper::calcAverage()
     }
     if(floatCount <= 1)
     {
-      // normalizeFactor /= atan(k);
+      float k = 1;
+      float normalizeFactor = 1.0f / atan(k);
       float sum  = accumulate(a.begin(),a.end(),0.0f);
       float average = sum/a.size();
       std::cout << "SampleShaper::calcAverage - a.size(), sum, average = " << a.size() << ", " << sum << ", " << average << "\n\n";
       if(average < 1 && average> -1){
-        // v.push_back(normalizeFactor * atan(k * average));
-        v.push_back(average);
+        v.push_back(normalizeFactor * atan(k * average));
+        // v.push_back(average);
       }
       a.clear();
       floatCount += 0.1;
