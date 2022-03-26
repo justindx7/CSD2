@@ -42,9 +42,9 @@ void changeEffects(int counter, float buf)
 
   if (analyzer.getPeak())
   {
+    //set delay feedback high
     peaked = true;
   }
-
   // if peaked set the effect settings and when the feedback is <0.41 reset the counter and peaked = false
   if (peaked)
   {
@@ -53,12 +53,26 @@ void changeEffects(int counter, float buf)
     effects[0]->setParameter("feedback", feedbackAmount);
     effects[1]->setParameter("feedback", feedbackAmount);
 
-    if (feedbackAmount < 0.41)
+    effects[0]->setParameter("modDepth", 600);
+    effects[1]->setParameter("modDepth", 600);
+
+    effects[3]->setParameter("feedback", 0.9);
+    effects[3]->setParameter("DelayTime", (1 - feedbackAmount) * 1000);
+
+    if (feedbackAmount < 0.41 && !analyzer.getPeak())
     {
       peaked = false;
       effects[0]->setParameter("feedback", 0.4);
       effects[1]->setParameter("feedback", 0.4);
+      effects[3]->setParameter("feedback", 0.5);
+      effects[3]->setParameter("DelayTime",1500);
+      std::cout << "terug" << std::endl;
       effectCounter = 0;
+    }
+    if(counter == samplerate)
+    {
+    effects[0]->setParameter("modDepth", 200);
+    effects[1]->setParameter("modDepth", 200);
     }
   }
 }
@@ -84,6 +98,7 @@ static void processAudio()
       analyzer.analyseSignal(inBuf[i]);
       counter++;
 
+      
       changeEffects(counter, inBuf[i]);
       if (counter >= samplerate * counterSeconds){counter = 0;}
     }
@@ -106,7 +121,7 @@ int main(int argc, char **argv)
   effects.push_back(new Chorus(0.5, false, samplerate, 0.4, false, 0.4));
   effects.push_back(new Chorus(0.5, false, samplerate, 0.4, false, 0.8));
   effects.push_back(new ReverseDelay(1, false, samplerate));
-  effects.push_back(new Delay(0.5, false, samplerate, 1500, 0.7));
+  effects.push_back(new Delay(0.5, false, samplerate, 1500, 0.5));
 
   // new thread
   std::thread jackThread(processAudio);
