@@ -15,7 +15,7 @@
 bool running = true;
 
 // with the marcs jack abstaraction module we dont need to know Jacks buffer size
-float chunksize = 2048;
+constexpr size_t chunksize = 2048;
 
 float samplerate = 44100; // default
 
@@ -79,8 +79,11 @@ void changeEffects(int counter, float buf)
 
 static void processAudio()
 {
-  float *inBuf = new float[chunksize];
-  float *outBuf = new float[chunksize];
+  float inBuf[chunksize];
+  float outBuf[chunksize * 2];
+
+  memset(&inBuf, 0, sizeof(inBuf));
+
   int counter = 0;
   int counterSeconds = 6;
   do
@@ -98,7 +101,6 @@ static void processAudio()
       analyzer.analyseSignal(inBuf[i]);
       counter++;
 
-      
       changeEffects(counter, inBuf[i]);
       if (counter >= samplerate * counterSeconds){counter = 0;}
     }
@@ -135,17 +137,15 @@ int main(int argc, char **argv)
       running = false;
       break;
     }
-    // otherwise i get segmentation fault when closing the program
-    usleep(100000);
+
   }
   // end the program
+  jackThread.join();
+  jack.end();
   for (auto effect : effects)
   {
     delete effect;
     effect = nullptr;
   }
-  jackThread.join();
-  jack.end();
-
   return 0;
 } // main()
