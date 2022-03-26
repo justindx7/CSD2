@@ -3,6 +3,7 @@
 #include "interpolation.h"
 #include <numeric>
 AudioFile<float> audioFile;
+#include "sine.h"
 
 SampleShaper::SampleShaper(float drywet,bool bypass, unsigned int samplerate) :
 Effect(drywet,bypass,samplerate),
@@ -11,12 +12,15 @@ vectorSize(0), numSamples(0), channel(0)
 {
   writeFile = new WriteToFile("output.csv",true);
   pickSample();
+  osc = new Sine(440,samplerate);
 }
 
 SampleShaper::~SampleShaper()
 {
   delete buffer;
   delete writeFile;
+  delete osc;
+  osc = nullptr;
   buffer = nullptr;
   writeFile = nullptr;
 }
@@ -25,11 +29,11 @@ SampleShaper::~SampleShaper()
 
 float SampleShaper::applyEffect(float sample)
 {
-  // sample += 1;
-  // float interpolatedValue = Interpolation::mapInRange(sample,0,2,0,vectorSize);
-  float interpolatedValue = Interpolation::mapInRange(sample,-1,1,0,vectorSize);
+  sample += 1;
+  float interpolatedValue = Interpolation::scale(sample,0,2.1,0,vectorSize);
+  // float interpolatedValue = Interpolation::mapInRange(sample,-1,1,0,vectorSize);
   int intS = (int) interpolatedValue;
-  float y = Interpolation::linMap(interpolatedValue,v[intS],v[intS+1]);
+  float y = Interpolation::linMap(interpolatedValue,intS,intS+1,v[intS],v[intS+1]);
   return y;
 }
 
@@ -41,14 +45,13 @@ void SampleShaper::pickSample()
   numSamples = audioFile.getNumSamplesPerChannel();
   numSamples -= 1;
   //else the buffer exeeds how many samples the wav has
-  audioFile.setBitDepth(24);
   fillBuffer();
 }
 
 void SampleShaper::fillBuffer() //add k factor in the forloop in here
 {
   // normalizeFactor /= atan(k);
-  // calcAverage();
+  calcAverage();
   // allSamples();
   vectorSize = v.size();
   delete buffer;
@@ -64,13 +67,13 @@ void SampleShaper::fillBuffer() //add k factor in the forloop in here
     // float vectorIndex = normalizeFactor * atan(k * v[i]);
     float vectorIndex = v[i];
     // float sigmoid = normalizeFactor * atan(k * vectorIndex);
-    float interpolatedValue = Interpolation::mapInRange(vectorIndex,begin,end,-1,1);
+    float interpolatedValue = Interpolation::scale(vectorIndex,begin,end,-1,1);
     buffer[i] = interpolatedValue;
     //nog meer interpoleren
     std::cout << "SampleShaper::fillBuffer - buffer[i] = " << buffer[i] << std::endl;
     std::cout << "SampleShaper::fillBuffer - vectorIndex = " << vectorIndex << std::endl;
     std::cout << "SampleShaper::fillBuffer - interpolatedValue = " << interpolatedValue << "\n\n";
-    writeFile->write(std::to_string(interpolatedValue) + "\n");
+    // writeFile->write(std::to_string(interpolatedValue) + "\n");
   }
   v.clear();
 }
@@ -88,7 +91,7 @@ void SampleShaper::calcAverage()
     }
     if(floatCount <= 1)
     {
-      float k = 1;
+      float k = 8;
       float normalizeFactor = 1.0f / atan(k);
       float sum  = accumulate(a.begin(),a.end(),0.0f);
       float average = sum/a.size();
@@ -98,7 +101,7 @@ void SampleShaper::calcAverage()
         // v.push_back(average);
       }
       a.clear();
-      floatCount += 0.1;
+      floatCount += 0.01;
     }
     else {running = false;}
   }
@@ -124,6 +127,16 @@ void SampleShaper::setParameter(std::string id, float val)
     // std::cin >> wav;
     pickSample();
   }
+}
+
+void sine()
+{
+  // for(int i =0; i<500;i++)
+  // {
+  //   float sample = applyEffect(osc->getSample());
+  //   writeFile->write(std::to_string(sample) + "\n");
+  //   osc->genNextSample();
+  // }
 }
 
 // E^iomega = cos(omega)+ isin(omega)

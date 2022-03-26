@@ -7,6 +7,7 @@
 #include "chorus.h"
 #include "tremolo.h"
 #include "sampleShaper.h"
+// #include "looper.h"
 
 #define WRITE_NUM_SAMPLES 44100
 
@@ -20,13 +21,10 @@ float samplerate = 44100; // default
 
 float amplitude = 0.5;
 
-SampleShaper ss(1,false,samplerate);
-
 // create a JackModule instance
 JackModule jack;
 
 std::vector <Effect *> effects{};
-
 
 static void connectToJack()
 {
@@ -51,9 +49,8 @@ static void connectToJack()
 
 int main(int argc, char **argv)
 {
-  // SampleShaper ss(1,false,samplerate);
-  // ss.setParameter("pickSample",0);
-  // std::cout << "ss.setParameter() - over \n";
+  // Looper loop(1,true,samplerate);
+  std::cout << "looper done \n";
     // set the amount of interleaved jack channels
     jack.setNumberOfInputChannels(1);
     jack.setNumberOfOutputChannels(2);
@@ -63,14 +60,23 @@ int main(int argc, char **argv)
     jack.autoConnect();
     samplerate = jack.getSamplerate();
 
+    // SampleShaper sample(1,false,samplerate);
+    // sample.sine();
 
     //here we fill the effect vector with effects
     // effects.push_back(new Chorus(1, false,samplerate,0.5, false, 4));
     // effects.push_back(new Chorus(1, false,samplerate,0.4, true, 6));
 
-    // effects.push_back(new SampleShaper(1, true,samplerate));
-    // effects.push_back(new SampleShaper(1, true,samplerate));
-    effects[0]->setParameter("pickSample", 0);
+    effects.push_back(new SampleShaper(1, false,samplerate));
+    effects.push_back(new SampleShaper(1, false,samplerate));
+
+    // effects.push_back(new Tremolo(1, false,samplerate,1));
+    // effects.push_back(new Tremolo(1, false,samplerate,4));
+
+    // effects.push_back(new Looper(1, false,samplerate));
+    // effects.push_back(new Looper(1, false,samplerate));
+
+    // effects[0]->setParameter("pickSample", 0);
     //new thread
     std::thread jackThread(connectToJack);
 
@@ -85,6 +91,11 @@ int main(int argc, char **argv)
     }
     //otherwise i get segmentation fault when closing the program
     usleep(100000);
+  }
+  for (auto effect : effects)
+  {
+    delete effect;
+    effect = nullptr;
   }
   // end the program
   jackThread.join();

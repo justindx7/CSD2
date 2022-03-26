@@ -1,4 +1,4 @@
-#include "effect.h" 
+#include "effect.h"
 
 Effect::Effect(float drywet, bool bypass, unsigned int samplerate)
 : drywet(drywet), bypass(bypass)
@@ -15,6 +15,7 @@ float Effect::process(float sample)
     output *= getDrywet();
     output += sample + 1.0 - getDrywet();
     //if bypass true return the input sample if bypass false return the output.
+    // std::cout << "Effect::process" << std::endl;
     return (bypass) ? sample : output;
 }
 void Effect::setDrywet(float _drywet)

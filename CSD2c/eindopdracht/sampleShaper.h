@@ -5,6 +5,7 @@
 #include "effect.h"
 #include "AudioFile.h"
 #include "writeToFile.h"
+#include "oscillator.h"
 
 class SampleShaper : public Effect
 {
@@ -14,12 +15,14 @@ public:
 
   float applyEffect(float sample) override;
   void setParameter(std::string id, float val) override;
+  void sine();
 
 private:
   std::vector<float> v;
   std::vector<float> a;
   float* buffer = nullptr; //should be dynamically allocated since there are two ways to fill the buffer
   WriteToFile* writeFile = nullptr;
+  Oscillator* osc;
 
   float currentSample;
   float floatCount;
