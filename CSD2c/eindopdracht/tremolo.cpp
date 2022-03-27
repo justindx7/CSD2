@@ -5,7 +5,6 @@
 Tremolo::Tremolo(float drywet, bool bypass, unsigned int samplerate,float modFreq) :
 Effect(drywet, bypass, samplerate)
 {
-  std::cout << "Tremolo - Constructor " << std::endl;
   osc = new Sine(modFreq,samplerate);
 }
 
