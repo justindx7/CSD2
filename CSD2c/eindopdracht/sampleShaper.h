@@ -4,39 +4,34 @@
 #include <algorithm>
 #include "effect.h"
 #include "AudioFile.h"
-#include "writeToFile.h"
-#include "oscillator.h"
 
 class SampleShaper : public Effect
 {
 public:
-  SampleShaper(float drywet,bool bypass, unsigned int samplerate);
+  SampleShaper(float drywet,bool bypass, unsigned int samplerate, float k);
   ~SampleShaper();
 
   float applyEffect(float sample) override;
   void setParameter(std::string id, float val) override;
-  void sine();
 
 private:
   std::vector<float> v;
   std::vector<float> a;
-  float* buffer = nullptr; //should be dynamically allocated since there are two ways to fill the buffer
-  WriteToFile* writeFile = nullptr;
-  Oscillator* osc;
+  float* buffer = nullptr;
 
   float currentSample;
   float floatCount;
   float drywet;
   float begin;
   float end;
+  float k;
   int vectorSize;
   int numSamples;
   int channel;
   std::string wav;
 
   void fillBuffer();
-  void calcAverage(); //sampleAverage
-  void allSamples();
+  void calcAverage();
   void pickSample();
 
 };
