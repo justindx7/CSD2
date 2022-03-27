@@ -20,7 +20,7 @@
 *
 *  File name     : jack_module.cpp
 *  System name   : jack_module
-* 
+*
 *  Description   : C++ abstraction for JACK Audio Connection Kit
 *		   Supports non-callback mode
 *
@@ -157,7 +157,7 @@ int JackModule::_wrap_jack_process_cb(jack_nframes_t nframes,void *arg)
  * The client application supplies samples as interleaved sample frames to
  * the output ringbuffer, which are de-interleaved here for writing to the
  * JACK output(s).
- * 
+ *
  * JACK input(s) supply non-interleaved channels which are interleaved here
  * for writing into the input ringbuffer.
  *
@@ -167,7 +167,7 @@ int JackModule::_wrap_jack_process_cb(jack_nframes_t nframes,void *arg)
  */
 int JackModule::onProcess(jack_nframes_t nframes)
 {
-  /* 
+  /*
    *    (audio input)
    *  - samples are read from the input and written into the input ringbuffer
    *
@@ -197,7 +197,7 @@ int JackModule::onProcess(jack_nframes_t nframes)
   }
 
   frames_pushed=inputringbuffer->push((jack_default_audio_sample_t *)tempbuffer,nframes*numberOfInputChannels);
-  if(frames_pushed<nframes*numberOfInputChannels) std::cout << "Buffer full\n";
+  if(frames_pushed<nframes*numberOfInputChannels) std::cout; //Buffer full
 
 
   // pop samples from output ringbuffer into JACK channel buffers
@@ -205,7 +205,7 @@ int JackModule::onProcess(jack_nframes_t nframes)
   // appropriate JACK output buffers
 
   frames_popped=outputringbuffer->pop((jack_default_audio_sample_t *)tempbuffer,nframes*numberOfOutputChannels);
-  if(frames_popped<nframes*numberOfOutputChannels) std::cout << "Buffer empty\n";
+  if(frames_popped<nframes*numberOfOutputChannels) std::cout; //buffer empty
 
   ringbufferindex=0;
   for(int frame=0; frame<(int)nframes; frame++){
@@ -220,7 +220,7 @@ int JackModule::onProcess(jack_nframes_t nframes)
 
 
 /*
- * 
+ *
  */
 int JackModule::setNumberOfInputChannels(int n)
 {

@@ -16,7 +16,6 @@ float Interpolation::scale(float y, float x1From, float x2From, float x1To, floa
 {
   float delta = x2From - x1From;
   float yScaled = y/delta;
-  std::cout << yScaled << std::endl;
   float newBufSize = x2To - x1To;
   float scale = (yScaled * newBufSize) + x1To;
   return scale;
@@ -25,5 +24,6 @@ float Interpolation::scale(float y, float x1From, float x2From, float x1To, floa
 float Interpolation::linMap(float x, float x1, float x2, float y1, float y2)
 {
   float y = y1 + (y2-y1) * ((x-x1) / (x2-x1));
+  //formula: https://en.wikipedia.org/wiki/Interpolation
   return y;
 }
