@@ -21,6 +21,6 @@ void setDelayTime(float ms);
 //output sample
 float feedback = 0;
 float samplerate;
-
+unsigned int size = 0;
 CircBuffer circBuffer;
 };

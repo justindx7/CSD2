@@ -4,7 +4,8 @@
 Delay::Delay(float drywet, bool bypass, unsigned int samplerate, int delayMS , float feedback)
 :Effect(drywet, bypass, samplerate), feedback(feedback), samplerate(samplerate)
 {
-    circBuffer.resetSize(samplerate * 3);
+    size = samplerate * 3;
+    circBuffer.resetSize(size);
     circBuffer.setDistanceRW(MStoSample(delayMS));
 }
 
@@ -34,7 +35,6 @@ void Delay::setFeedback(float _feedback)
 //convert miliseconds to samplerate
 float Delay::MStoSample(float ms)
 {
-std::cout << 44100 * (ms / 1000) << "\n";
 return samplerate * (ms / 1000);
 }
 
@@ -49,17 +49,16 @@ void Delay::setParameter(std::string id, float val)
 {
     //TODO add size changer or make the size bigger and smaller using the time.
     if(id == "delayTime"){
-        if(val <= 1000){
+        if(val <= size){
         setDelayTime(val);
         }
         else{
-            std::cout << "delay time cant be higher than size" << std::endl;
+           std::cout << "delay time cant be higher than size" << std::endl;
         }
     }
     if(id == "feedback"){
         if(val < 1.0F){
         setFeedback(val);
-        std::cout << "feedback: " << val << std::endl;
         }
         else{
             std::cout << "feedback cant be higher than 0.9" << std::endl;

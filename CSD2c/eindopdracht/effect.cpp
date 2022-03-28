@@ -29,3 +29,8 @@ void Effect::setBypass(bool _bypass)
 {
     bypass = _bypass;
 }
+
+bool Effect::getBypass()
+{
+ return bypass;
+}

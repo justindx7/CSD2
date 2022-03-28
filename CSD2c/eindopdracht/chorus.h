@@ -26,7 +26,7 @@ public:
 
     private:
     Oscillator* osc;
-    float modDepth = 200;
+    float modDepth = 150;
     float offset = 88.2;
     CircBuffer circBuffer;
     bool invertPolarity;
