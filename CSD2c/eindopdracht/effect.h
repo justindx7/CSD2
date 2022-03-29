@@ -15,6 +15,7 @@ public:
      void setDrywet(float _drywet);
      float getDrywet();
      void setBypass(bool _bypass);
+     bool getBypass();
      virtual void setParameter(std::string id, float val) =  0;
      
 protected:
