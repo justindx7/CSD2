@@ -11,6 +11,7 @@
 #include "sampleShaper.h"
 #include "looper.h"
 #include "uiUtilities.h"
+#include "tremolo.h"
 
 #define WRITE_NUM_SAMPLES 44100
 // boolean is used to keep program running / turn it off
@@ -101,11 +102,11 @@ static void processAudio()
     jack.readSamples(inBuf, chunksize);
     for (unsigned int i = 0; i < chunksize; i++)
     {
-      // LEFT CHANNEL
-      outBuf[2 * i] = effects[1]->process(effects[3]->process(effects[2]->process(inBuf[i] * amplitude))); // effect code here
+      // // LEFT CHANNEL
+      outBuf[2 * i] = effects[1]->process(effects[3]->process(effects[2]->process(effects[5]->process(inBuf[i] * amplitude)))); // effect code here
 
       // RIGHT CHANNEL
-      outBuf[2 * i + 1] = effects[0]->process(effects[3]->process(effects[2]->process(inBuf[i] * amplitude))); // effect code here
+      outBuf[2 * i + 1] = effects[0]->process(effects[3]->process(effects[2]->process(effects[4]->process(inBuf[i] * amplitude)))); // effect code here
 
       // TODO maybe not analyze the signal in the processAudio
       analyzer.analyseSignal(inBuf[i]);
@@ -134,8 +135,11 @@ int main(int argc, char **argv)
   effects.push_back(new Chorus(0.5, false, samplerate, 0.4, false, 0.8));
   effects.push_back(new ReverseDelay(1, false, samplerate));
   effects.push_back(new Delay(0.5, false, samplerate, 1500, 0.5));
-  //effects.push_back(new SampleShaper(1, false, samplerate,2));
-  //effects.push_back(new Looper(1, true, samplerate));
+  effects.push_back(new SampleShaper(0.5, false, samplerate,5));
+  effects.push_back(new SampleShaper(0.5, false, samplerate,4));
+  // effects.push_back(new Looper(1, true, samplerate));
+  // effects.push_back(new Tremolo(1, false,samplerate,1));
+  // effects.push_back(new Tremolo(1, false,samplerate,1));
 
   // new thread
   std::thread jackThread(processAudio);
@@ -153,7 +157,6 @@ int main(int argc, char **argv)
       std::cout << "----------------------HELP----------------------------------------.\n";
       std::cout << "Press 'q' when you want to quit the program.\n";
       std::cout << "Press 'e' when you want to add an switch an effect on and off.\n";
-      std::cout << "Press 'w' when you want to load a sample into the distortion.\n";
       std::cout << "Press 'l' when you want to load a loop into the looper.\n";
       std::cout << "------------------------------------------------------------------.\n";
       break;
@@ -163,18 +166,12 @@ int main(int argc, char **argv)
       effects[4]->setParameter("pickSample", 0);
       break;
 
-    case 'l':
-      std::cout << "Drag your sample into the terminal and press enter" << std::endl;
-      effects[5]->setParameter("pickSample", 0);
-      break;
-
-
     case 'e':
       std::string effectsList[6]{"ChorusL", "ChorusR", "reverseDelay", "Delay", "sampleShaper", "Looper"};
       int effectChoice = UIUtilities::retrieveSelectionIndex(effectsList, 6);
       // bypass switch
       effects[effectChoice]->setBypass(!effects[effectChoice]->getBypass());
-    
+
       std::cout << effectsList[effectChoice] << " bypass:  "<< effects[effectChoice]->getBypass()<< std::endl;
       break;
     }

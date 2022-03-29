@@ -1,9 +1,10 @@
 #pragma once
-#include <vector>
 #include <iostream>
 #include <algorithm>
+#include <vector>
 #include "effect.h"
 #include "AudioFile.h"
+#include "writeToFile.h"
 
 class SampleShaper : public Effect
 {
@@ -17,10 +18,12 @@ public:
 private:
   std::vector<float> v;
   std::vector<float> a;
-  float* buffer = nullptr;
+  float* buffer = nullptr; //should be dynamically allocated since there are two ways to fill the buffer
+  WriteToFile* writeFile = nullptr;
 
-  float currentSample;
   float floatCount;
+  float drywet;
+  float currentSample;
   float begin;
   float end;
   float k;
@@ -30,7 +33,8 @@ private:
   std::string wav;
 
   void fillBuffer();
-  void calcAverage();
+  void calcAverage(float k); //sampleAverage
+  void allSamples();
   void pickSample();
 
 };
