@@ -109,3 +109,5 @@ target_link_libraries(AudioPluginExample
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
+
+target_compile_features(AudioPluginExample PRIVATE cxx_std_20)
