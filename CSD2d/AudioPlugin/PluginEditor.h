@@ -1,5 +1,5 @@
 #pragma once
-
+//debounce voor opschonen van jittery parameters. 
 #include "PluginProcessor.h"
 
 //==============================================================================
