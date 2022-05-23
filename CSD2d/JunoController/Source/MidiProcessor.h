@@ -22,12 +22,18 @@ public:
     
     void process(MidiBuffer& midiMessages);
     void processMidiInput(const MidiBuffer& midiMessages);
-    void addTransposedNote(const MidiMessage& currentMessage, int samplePos);
-    void addMessageToBuffer (const MidiMessage& message);
-private:
-    MidiBuffer sysExBuffer;
+    void sendMidiMessage (const MidiMessage& message);
     
+    void setFreqSliderValObject(const Value& ValueObject);
+    
+    
+private:
+    
+    //this is used to create a midioutput
     MidiDeviceInfo device;
     std::unique_ptr<MidiOutput> output;
+    
+    Value test;
+    int cutOffPatchData = 0;
 };
 

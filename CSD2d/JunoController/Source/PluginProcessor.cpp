@@ -19,9 +19,13 @@ JunoControllerAudioProcessor::JunoControllerAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
+JunoControllerParams(*this, nullptr, "Parameters", {
+    std::make_unique<AudioParameterInt>("cutoff","Cutoff", 0, 127, 0)
+})
 #endif
 {
+    Cutoff = JunoControllerParams.getRawParameterValue("cutoff");
 }
 
 JunoControllerAudioProcessor::~JunoControllerAudioProcessor()
@@ -144,7 +148,7 @@ bool JunoControllerAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* JunoControllerAudioProcessor::createEditor()
 {
-    return new JunoControllerAudioProcessorEditor (*this);
+    return new JunoControllerAudioProcessorEditor (*this, JunoControllerParams);
 }
 
 //==============================================================================
@@ -159,6 +163,7 @@ void JunoControllerAudioProcessor::setStateInformation (const void* data, int si
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    MemoryInputStream mis(data, sizeInBytes, false);
 }
 
 //==============================================================================

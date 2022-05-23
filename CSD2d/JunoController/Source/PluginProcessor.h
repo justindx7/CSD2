@@ -55,7 +55,11 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
+    
     MidiProcessor midiProcessor;
+    
+    std::atomic<float> *Cutoff;
+    juce::AudioProcessorValueTreeState JunoControllerParams;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JunoControllerAudioProcessor)
 };

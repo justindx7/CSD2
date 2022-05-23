@@ -9,6 +9,7 @@
 */
 
 #include "MidiProcessor.h"
+#include "PluginEditor.h"
 
 
 MidiProcessor::MidiProcessor()
@@ -20,45 +21,36 @@ MidiProcessor::MidiProcessor()
 
 MidiProcessor::~MidiProcessor()
 {
-    
 }
+
+
 void MidiProcessor::process(MidiBuffer& midiMessages)
 {
-   // sysExBuffer.clear();
     processMidiInput(midiMessages);
-    midiMessages.swapWith(sysExBuffer);
 }
 
 void MidiProcessor::processMidiInput(const MidiBuffer& midiMessages)
 {
     for (const MidiMessageMetadata currentMessage : midiMessages){
-        //Logger::writeToLog(currentMessage.getMessage().getDescription());
-        if(currentMessage.getMessage().isNoteOnOrOff())
-            addTransposedNote(currentMessage.getMessage(), currentMessage.samplePosition);
-        
+        // checking if the sysEx message has a size of 52 because thats how long a changed patch message is.
+        if(currentMessage.getMessage().isSysEx() && currentMessage.getMessage().getSysExDataSize() == 52)
+        {
+            DBG("changed patch!");
+            const uint8* patchData = currentMessage.getMessage().getSysExData();
+            // number 22 holds the patch value for the Cutoff.
+            cutOffPatchData = patchData[22];
+            DBG(cutOffPatchData);
+            test.setValue(cutOffPatchData);
+        }
     }
 }
 
-void MidiProcessor::addTransposedNote(const MidiMessage& currentMessage, int samplePos)
+void MidiProcessor::sendMidiMessage(const MidiMessage& message)
 {
-    auto transposedMessage = currentMessage;
-    auto oldNoteNum = transposedMessage.getNoteNumber();
-    transposedMessage.setNoteNumber(oldNoteNum + 7);
-    
-    sysExBuffer.addEvent(transposedMessage, samplePos);
-    
-    //uint8 cutoff[8] = {0x41, 0x36, 0x00, 0x23, 0x20, 0x01, 0x10, 0x00};
-    //cutoff[7] = 100;
-    //auto message = MidiMessage::createSysExMessage(cutoff, 8);
-    
-    //sysExBuffer.addEvent(message, samplePos);
-
-    
+         output->sendMessageNow(message);
 }
 
-void MidiProcessor::addMessageToBuffer (const MidiMessage& message)
+void MidiProcessor::setFreqSliderValObject(const Value& ValueObject)
 {
-        sysExBuffer.addEvent(message, sysExBuffer.getLastEventTime() + 1);
-       // DBG(message.getDescription());
-        output->sendMessageNow(message);
+    test.referTo(ValueObject);
 }
