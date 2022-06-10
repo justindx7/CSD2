@@ -28,6 +28,7 @@ JunoControllerAudioProcessorEditor::JunoControllerAudioProcessorEditor (JunoCont
     frequencyLabel.setText("Frequency", juce::dontSendNotification);
     frequencyLabel.attachToComponent(&frequencySlider, true);
     
+    
     midiProcessor.setFreqSliderValObject(frequencySlider.getValueObject());
 
     

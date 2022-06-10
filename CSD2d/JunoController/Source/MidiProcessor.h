@@ -12,7 +12,6 @@
 
 #include <JuceHeader.h>
 
-
 class MidiProcessor
 {
     
@@ -24,7 +23,7 @@ public:
     void processMidiInput(const MidiBuffer& midiMessages);
     void sendMidiMessage (const MidiMessage& message);
     
-    void setFreqSliderValObject(const Value& ValueObject);
+    void setFreqSliderValObject(Value& ValueObject);
     
     
 private:
@@ -35,5 +34,5 @@ private:
     
     Value test;
     int cutOffPatchData = 0;
+    
 };
-

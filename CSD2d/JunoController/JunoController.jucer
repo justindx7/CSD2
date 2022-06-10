@@ -2,9 +2,9 @@
 
 <JUCERPROJECT id="xXWZm8" name="JunoController" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="1" displaySplashScreen="1" jucerFormatVersion="1"
-              pluginFormats="buildStandalone,buildVST3" cppLanguageStandard="20"
+              pluginFormats="buildAU,buildStandalone,buildVST3" cppLanguageStandard="20"
               pluginCharacteristicsValue="pluginIsMidiEffectPlugin,pluginProducesMidiOut,pluginWantsMidiIn"
-              pluginVST3Category="Instrument,Tools">
+              pluginVST3Category="Instrument,Tools" pluginAUMainType="'aumi'">
   <MAINGROUP id="r9dxAX" name="JunoController">
     <GROUP id="{39ADD98D-A447-CA42-810B-820A792CD58B}" name="Source">
       <FILE id="Xk4ADK" name="MidiProcessor.h" compile="0" resource="0" file="Source/MidiProcessor.h"/>
