@@ -17,7 +17,7 @@ JunoControllerAudioProcessorEditor::JunoControllerAudioProcessorEditor (JunoCont
     FreqAttachment = std::make_unique<SliderAttachment>(Reference,"cutoff", frequencySlider);
     frequencySlider.onValueChange = [this] ()
     {
-        
+        // creates midi sysexMessage this string is for the cutoff frequency
         uint8 cutoff[8] = {0x41, 0x36, 0x00, 0x23, 0x20, 0x01, 0x10, 0x00};
         cutoff[7] = frequencySlider.getValue();
         auto message = MidiMessage::createSysExMessage(cutoff, 8);

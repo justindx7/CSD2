@@ -14,6 +14,8 @@
 #include <string>
 #include <JuceHeader.h>
 
+//not making an effect pointer to ladderfilter in main because it this introduced problems.
+
 class Effect
 {
 public:

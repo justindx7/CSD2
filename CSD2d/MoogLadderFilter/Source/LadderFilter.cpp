@@ -30,7 +30,7 @@ LadderFilter::~LadderFilter()
 
 float LadderFilter::applyEffect(float sample)
 {
-    //block diagram fig 16
+    //almost block diagram fig 16 look in "projectbeschrijving"
     
     float input = sample - history1;
     float comp = gComp * sample;

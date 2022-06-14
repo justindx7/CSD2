@@ -4,7 +4,7 @@
     This file contains the basic framework code for a JUCE plugin editor.
 
   ==============================================================================
-*/
+*/    
 
 #pragma once
 
@@ -40,30 +40,4 @@ private:
     MidiProcessor midiProcessor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JunoControllerAudioProcessorEditor)
-    
-    class IncomingMessageCallback   : public juce::CallbackMessage
-    {
-    public:
-        IncomingMessageCallback (JunoControllerAudioProcessorEditor* o, int value, const juce::String& s)
-           : owner (o), value (value), source (s)
-        {}
-
-        void messageCallback() override
-        {
-            std::cout << "\ninside messageCallback method\n";
-            std::cout << "\nmessage value: " << value << std::endl;
-
-            // @JUSTIN - probeer hierr eens je slider aan te passen
-        }
-
-        Component::SafePointer<JunoControllerAudioProcessorEditor> owner;
-        int value;
-        juce::String source;
-    };
-
-    void postMessageToList (const int value, const juce::String& source)
-    {
-        (new IncomingMessageCallback (this, value, source))->post();
-    }
-
 };

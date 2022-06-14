@@ -46,8 +46,6 @@ void MidiProcessor::processMidiInput(const MidiBuffer& midiMessages)
             // number 22 holds the patch value for the Cutoff.
             cutOffPatchData = patchData[22];
             DBG(cutOffPatchData);
-            //test.setValue(cutOffPatchData);
-            //test.setValue(50);
         }
     }
 }
@@ -59,5 +57,6 @@ void MidiProcessor::sendMidiMessage(const MidiMessage& message)
 
 void MidiProcessor::setFreqSliderValObject(Value& ValueObject)
 {
+    //does nothing this version tried to get the midi data to change the slider
     test.referTo(ValueObject);
 }
